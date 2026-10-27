@@ -41,7 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AntecedenteMedico.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Consulta.cs" />
+    <Compile Include="Especialidad.cs" />
+    <Compile Include="EstadoTurno.cs" />
+    <Compile Include="Medico.cs" />
+    <Compile Include="ObraSocial.cs" />
+    <Compile Include="Paciente.cs" />
+    <Compile Include="TurnoMedico.cs" />
+    <Compile Include="TurnoTrabajo.cs" />
+    <Compile Include="Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
