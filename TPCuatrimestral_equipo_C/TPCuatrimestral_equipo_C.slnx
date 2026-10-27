@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="clinica-web/clinica-web.csproj" Id="8d94e9c7-7796-448a-acab-916d1dcd9b05" />
+  <Project Path="dominio/dominio.csproj" Id="ff228e43-f17c-4f61-95d6-bd760a8e29fe" />
+  <Project Path="negocio/negocio.csproj" Id="cf798839-ed66-4b32-9c57-22edeb742666" />
+</Solution>
