@@ -12,7 +12,7 @@ namespace dominio
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Matricula { get; set; }
-        public Especialidad Especialidad { get; set; }
+        public List<Especialidad> Especialidades { get; set; }
         public List<TurnoTrabajo> TurnosTrabajo { get; set; }
     }
 }
