@@ -19,12 +19,18 @@ namespace negocio
         public AccesoDatos()
         {
             conexion = new SqlConnection();
-            conexion.ConnectionString = @"Server=localhost\SQLEXPRESS;Database=clinica_privada;Integrated Security=True;";
+
+            // Conexion con env
+            string conexionConEnv = Environment.GetEnvironmentVariable("DB_CLINICA_CONNECTION", EnvironmentVariableTarget.User);
+
+            // Si env es null utiliza la connection string
+            conexion.ConnectionString = conexionConEnv ?? @"Server=localhost\SQLEXPRESS;Database=clinica_privada;Integrated Security=True;";
+
             comando = new SqlCommand();
             comando.Connection = conexion;
         }
 
-
+        
         public void SetearConsulta(string consulta)
         {
             comando.CommandType = System.Data.CommandType.Text;
