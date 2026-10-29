@@ -28,7 +28,7 @@ namespace negocio
                     paciente.Nombre = (string)datos.Lector["Nombre"];
                     paciente.Apellido = (string)datos.Lector["Apellido"];
                     paciente.Dni = (string)datos.Lector["Dni"];
-                    paciente.FechaNacimiento = (DateTime)datos.Lector["FechaNacimiento"];
+                    paciente.FechaNacimiento = (DateTime)datos.Lector["fecha_nacimiento"];
                     paciente.Telefono = datos.Lector["Telefono"].ToString();
                     paciente.Email = datos.Lector["Email"].ToString();
 

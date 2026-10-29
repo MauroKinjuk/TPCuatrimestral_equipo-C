@@ -19,6 +19,7 @@ namespace negocio
         public AccesoDatos()
         {
             conexion = new SqlConnection();
+            conexion.ConnectionString = @"Server=localhost\SQLEXPRESS;Database=clinica_privada;Integrated Security=True;";
             comando = new SqlCommand();
             comando.Connection = conexion;
         }
