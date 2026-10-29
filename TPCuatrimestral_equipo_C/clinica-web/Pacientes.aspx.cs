@@ -17,7 +17,7 @@ namespace clinica_web
         List<Paciente> listaEjemplo = new List<Paciente>
         {
             new Paciente {Id = 1, Nombre = "María", Apellido = "Gómez", Dni = "32145678", Email = "maria.gomez@email.com", Telefono = "2954 987654"},
-            new Paciente {Id = 2, Nombre = "Carlos", Apellido = "Rodríguez", Dni = "v", Email = "carlos.r@email.com", Telefono = "2954 456789"}
+            new Paciente {Id = 2, Nombre = "Carlos", Apellido = "Rodríguez", Dni = "12345678", Email = "carlos.r@email.com", Telefono = "2954 456789"}
         };
 
         protected void Page_Load(object sender, EventArgs e)
