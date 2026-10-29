@@ -13,5 +13,10 @@ namespace clinica_web
         {
 
         }
+
+        protected void btnAsignar_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
