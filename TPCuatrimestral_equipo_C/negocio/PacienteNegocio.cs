@@ -42,6 +42,39 @@ namespace negocio
         }
 
 
+        public List<Paciente> Filtrar(string texto)
+        {
+            List<Paciente> lista = new List<Paciente>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"SELECT p.id, p.nombre, p.apellido, p.dni, p.fecha_nacimiento, p.telefono, p.email, p.direccion, p.nro_afiliado,
+                                            os.id AS id_obra_social, os.nombre AS obra_social
+                                     FROM pacientes p
+                                     LEFT JOIN obras_sociales os ON os.id = p.id_obra_social
+                                     WHERE p.nombre LIKE @filtro OR p.apellido LIKE @filtro OR p.dni LIKE @filtro");
+                datos.SetearParametro("@filtro", "%" + texto + "%");
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    lista.Add(leerPaciente(datos.Lector));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al filtrar los pacientes.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return lista;
+        }
+
+
         public Paciente Obtener(int id)
         {
             AccesoDatos datos = new AccesoDatos();
