@@ -35,6 +35,7 @@ namespace negocio
         {
             comando.CommandType = System.Data.CommandType.Text;
             comando.CommandText = consulta;
+            comando.Parameters.Clear();
         }
 
         public void SetearParametro(string nombre, object valor)
@@ -46,6 +47,20 @@ namespace negocio
         {
             conexion.Open();
             lector = comando.ExecuteReader();
+        }
+
+
+        public void EjecutarAccion()
+        {
+            conexion.Open();
+            comando.ExecuteNonQuery();
+        }
+
+
+        public object EjecutarScalar()
+        {
+            conexion.Open();
+            return comando.ExecuteScalar();
         }
 
 
