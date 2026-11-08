@@ -42,6 +42,114 @@ namespace negocio
         }
 
 
+        public Paciente Obtener(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            Paciente paciente = null;
+
+            try
+            {
+                datos.SetearConsulta(@"SELECT p.id, p.nombre, p.apellido, p.dni, p.fecha_nacimiento, p.telefono, p.email, p.direccion, p.nro_afiliado,
+                                            os.id AS id_obra_social, os.nombre AS obra_social
+                                     FROM pacientes p
+                                     LEFT JOIN obras_sociales os ON os.id = p.id_obra_social
+                                     WHERE p.id = @id");
+                datos.SetearParametro("@id", id);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    paciente = leerPaciente(datos.Lector);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener el paciente.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return paciente;
+        }
+
+
+        public void Agregar(Paciente paciente)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"INSERT INTO pacientes (id_obra_social, nombre, apellido, dni, fecha_nacimiento, telefono, email, direccion, nro_afiliado)
+                                     VALUES (@idObraSocial, @nombre, @apellido, @dni, @fechaNacimiento, @telefono, @email, @direccion, @nroAfiliado)");
+                cargarParametros(datos, paciente);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al agregar el paciente.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
+        public void Modificar(Paciente paciente)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"UPDATE pacientes SET
+                                        id_obra_social = @idObraSocial,
+                                        nombre = @nombre,
+                                        apellido = @apellido,
+                                        dni = @dni,
+                                        fecha_nacimiento = @fechaNacimiento,
+                                        telefono = @telefono,
+                                        email = @email,
+                                        direccion = @direccion,
+                                        nro_afiliado = @nroAfiliado
+                                     WHERE id = @id");
+                cargarParametros(datos, paciente);
+                datos.SetearParametro("@id", paciente.Id);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al modificar el paciente.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
+        public void Eliminar(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("DELETE FROM pacientes WHERE id = @id");
+                datos.SetearParametro("@id", id);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al eliminar el paciente.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
         private Paciente leerPaciente(SqlDataReader lector)
         {
             Paciente paciente = new Paciente();
@@ -64,6 +172,20 @@ namespace negocio
             }
 
             return paciente;
+        }
+
+
+        private void cargarParametros(AccesoDatos datos, Paciente paciente)
+        {
+            datos.SetearParametro("@idObraSocial", paciente.ObraSocial != null ? (object)paciente.ObraSocial.Id : DBNull.Value);
+            datos.SetearParametro("@nombre", paciente.Nombre);
+            datos.SetearParametro("@apellido", paciente.Apellido);
+            datos.SetearParametro("@dni", paciente.Dni);
+            datos.SetearParametro("@fechaNacimiento", paciente.FechaNacimiento);
+            datos.SetearParametro("@email", paciente.Email);
+            datos.SetearParametro("@telefono", string.IsNullOrEmpty(paciente.Telefono) ? (object)DBNull.Value : paciente.Telefono);
+            datos.SetearParametro("@direccion", string.IsNullOrEmpty(paciente.Direccion) ? (object)DBNull.Value : paciente.Direccion);
+            datos.SetearParametro("@nroAfiliado", string.IsNullOrEmpty(paciente.NroAfiliado) ? (object)DBNull.Value : paciente.NroAfiliado);
         }
     }
 }
