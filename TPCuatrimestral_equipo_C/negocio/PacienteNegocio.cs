@@ -77,6 +77,11 @@ namespace negocio
 
         public void Agregar(Paciente paciente)
         {
+            if (ExisteDni(paciente.Dni, 0))
+            {
+                throw new Exception("Ya existe un paciente registrado con ese DNI.");
+            }
+
             AccesoDatos datos = new AccesoDatos();
 
             try
@@ -99,6 +104,11 @@ namespace negocio
 
         public void Modificar(Paciente paciente)
         {
+            if (ExisteDni(paciente.Dni, paciente.Id))
+            {
+                throw new Exception("Ya existe otro paciente registrado con ese DNI.");
+            }
+
             AccesoDatos datos = new AccesoDatos();
 
             try
@@ -131,6 +141,11 @@ namespace negocio
 
         public void Eliminar(int id)
         {
+            if (TieneTurnos(id))
+            {
+                throw new Exception("No se puede eliminar el paciente porque tiene turnos asociados.");
+            }
+
             AccesoDatos datos = new AccesoDatos();
 
             try
@@ -142,6 +157,51 @@ namespace negocio
             catch (Exception ex)
             {
                 throw new Exception("Error al eliminar el paciente.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
+        public bool ExisteDni(string dni, int idExcluir)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT COUNT(*) FROM pacientes WHERE dni = @dni AND id <> @idExcluir");
+                datos.SetearParametro("@dni", dni);
+                datos.SetearParametro("@idExcluir", idExcluir);
+
+                return (int)datos.EjecutarScalar() > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al validar el DNI del paciente.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
+        public bool TieneTurnos(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT COUNT(*) FROM turnos WHERE id_paciente = @id");
+                datos.SetearParametro("@id", id);
+
+                return (int)datos.EjecutarScalar() > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al verificar los turnos del paciente.", ex);
             }
             finally
             {
