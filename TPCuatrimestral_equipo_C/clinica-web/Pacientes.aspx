@@ -1,41 +1,20 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master.Master" AutoEventWireup="true" CodeBehind="Pacientes.aspx.cs" Inherits="clinica_web.WebForm1" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master.Master" AutoEventWireup="true" CodeBehind="Pacientes.aspx.cs" Inherits="clinica_web.Pacientes" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-    <!-- Registro -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-white">
-            <h5 class="mb-0 pt-1">Registrar Nuevo Paciente</h5>
+    <asp:Panel ID="pnlMensaje" runat="server" Visible="false" CssClass="alert alert-danger">
+        <asp:Label ID="lblMensaje" runat="server"></asp:Label>
+    </asp:Panel>
+
+    <!-- Buscador y alta -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex gap-2">
+            <asp:TextBox ID="txtBuscar" runat="server" CssClass="form-control" placeholder="Buscar por nombre, apellido o DNI"></asp:TextBox>
+            <asp:Button ID="btnBuscar" runat="server" Text="Buscar" CssClass="btn btn-outline-secondary" OnClick="btnBuscar_Click" />
         </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="txtNombre" class="form-label">Nombre</label>
-                    <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" placeholder="Ej. Juan"></asp:TextBox>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="txtApellido" class="form-label">Apellido</label>
-                    <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control" placeholder="Ej. Pérez"></asp:TextBox>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="txtDni" class="form-label">DNI</label>
-                    <asp:TextBox ID="txtDni" runat="server" CssClass="form-control" placeholder="Sin puntos ni espacios"></asp:TextBox>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="txtEmail" class="form-label">Correo Electrónico</label>
-                    <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" placeholder="correo@ejemplo.com" TextMode="Email"></asp:TextBox>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="txtTelefono" class="form-label">Teléfono</label>
-                    <asp:TextBox ID="txtTelefono" runat="server" CssClass="form-control" placeholder="Ej. 2954 123456"></asp:TextBox>
-                </div>
-            </div>
-            <div class="text-end mt-2">
-                <asp:Button ID="btnGuardar" runat="server" Text="Guardar" CssClass="btn btn-primary px-4" OnClick="btnGuardar_Click" />
-            </div>
-        </div>
+        <asp:Button ID="btnNuevo" runat="server" Text="Nuevo paciente" CssClass="btn btn-primary" OnClick="btnNuevo_Click" />
     </div>
 
     <!-- Tabla -->
@@ -46,22 +25,33 @@
                     AutoGenerateColumns="False"
                     CssClass="table table-striped align-middle mb-0"
                     GridLines="None"
-                    UseAccessibleHeader="True">
+                    UseAccessibleHeader="True"
+                    OnRowCommand="dgvPacientes_RowCommand">
 
                     <HeaderStyle CssClass="table-dark" />
 
                     <Columns>
                         <asp:BoundField DataField="Id" HeaderText="ID" HeaderStyle-CssClass="ps-4" ItemStyle-CssClass="ps-4" />
-                        <asp:BoundField DataField="Nombre" HeaderText="Nombre" HeaderStyle-CssClass="ps-4" ItemStyle-CssClass="ps-4" />
-                        <asp:BoundField DataField="Apellido" HeaderText="Apellido" HeaderStyle-CssClass="ps-4" ItemStyle-CssClass="ps-4" />
-                        <asp:BoundField DataField="Dni" HeaderText="DNI" HeaderStyle-CssClass="ps-4" ItemStyle-CssClass="ps-4" />
-                        <asp:BoundField DataField="Email" HeaderText="Email" HeaderStyle-CssClass="ps-4" ItemStyle-CssClass="ps-4" />
-                        <asp:BoundField DataField="Telefono" HeaderText="Teléfono" HeaderStyle-CssClass="ps-4" ItemStyle-CssClass="ps-4" />
+                        <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
+                        <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
+                        <asp:BoundField DataField="Dni" HeaderText="DNI" />
+                        <asp:BoundField DataField="FechaNacimiento" HeaderText="Nacimiento" DataFormatString="{0:dd/MM/yyyy}" />
+                        <asp:BoundField DataField="Telefono" HeaderText="Teléfono" />
+                        <asp:BoundField DataField="Email" HeaderText="Email" />
+
+                        <asp:TemplateField HeaderText="Obra Social">
+                            <ItemTemplate>
+                                <%# Eval("ObraSocial.Nombre") %>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
                         <asp:TemplateField HeaderText="Acciones" HeaderStyle-CssClass="text-end pe-4" ItemStyle-CssClass="text-end pe-4">
                             <ItemTemplate>
-                                <asp:Button ID="btnEditar" runat="server" Text="Editar" CssClass="btn btn-sm btn-outline-secondary me-1" />
-                                <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-sm btn-outline-danger" />
+                                <asp:Button ID="btnEditar" runat="server" Text="Editar" CssClass="btn btn-sm btn-outline-secondary me-1"
+                                    CommandName="Editar" CommandArgument='<%# Eval("Id") %>' />
+                                <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-sm btn-outline-danger"
+                                    CommandName="Eliminar" CommandArgument='<%# Eval("Id") %>'
+                                    OnClientClick="return confirm('¿Seguro que querés eliminar este paciente?');" />
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
