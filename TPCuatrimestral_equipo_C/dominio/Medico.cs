@@ -11,6 +11,11 @@ namespace dominio
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
+
+        public string NombreCompleto
+        {
+            get { return Nombre + " " + Apellido; }
+        }
         public string Matricula { get; set; }
         public List<Especialidad> Especialidades { get; set; }
         public List<TurnoTrabajo> TurnosTrabajo { get; set; }

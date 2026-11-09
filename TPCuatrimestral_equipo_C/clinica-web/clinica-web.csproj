@@ -61,7 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
+    <Content Include="FormularioTurnoTrabajo.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="TurnosTrabajo.aspx" />
     <Content Include="Web.config" />
     <Content Include="Pacientes.aspx" />
     <Content Include="Medicos.aspx" />
@@ -75,6 +77,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FormularioTurnoTrabajo.aspx.cs">
+      <DependentUpon>FormularioTurnoTrabajo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FormularioTurnoTrabajo.aspx.designer.cs">
+      <DependentUpon>FormularioTurnoTrabajo.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -114,6 +123,13 @@
     </Compile>
     <Compile Include="Turnos.aspx.designer.cs">
       <DependentUpon>Turnos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TurnosTrabajo.aspx.cs">
+      <DependentUpon>TurnosTrabajo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TurnosTrabajo.aspx.designer.cs">
+      <DependentUpon>TurnosTrabajo.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
