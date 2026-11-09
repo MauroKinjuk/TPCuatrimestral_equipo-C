@@ -55,12 +55,6 @@ namespace negocio
             comando.ExecuteNonQuery();
         }
 
-        public void EjecutarAccion()
-        {
-            conexion.Open();
-            comando.ExecuteNonQuery();
-        }
-
 
         public object EjecutarScalar()
         {
