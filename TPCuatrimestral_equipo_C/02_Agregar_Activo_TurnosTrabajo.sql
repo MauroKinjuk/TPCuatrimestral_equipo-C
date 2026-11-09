@@ -1,20 +1,13 @@
-SELECT
-    T.id AS IdTurnoTrabajo,
-    T.id_medico AS IdMedico,
-    T.dia_semana,
-    T.hora_inicio,
-    T.hora_fin,
-    M.nombre,
-    M.apellido,
-    M.matricula
-FROM turnos_trabajo T
-INNER JOIN medicos M ON T.id_medico = M.id;
+USE clinica_privada;
+GO
 
+-- Agregar columna activo para eliminación lógica
+-- 1 = Activo
+-- 0 = Inactivo
 
-ALTER TABLE turnos_trabajo
-ADD activo BIT NOT NULL DEFAULT 1;
-
-
-SELECT id, id_medico, dia_semana, hora_inicio, hora_fin, activo
-FROM turnos_trabajo
-WHERE activo = 0;
+IF COL_LENGTH('dbo.turnos_trabajo', 'activo') IS NULL
+BEGIN
+    ALTER TABLE dbo.turnos_trabajo
+    ADD activo BIT NOT NULL DEFAULT 1;
+END;
+GO
