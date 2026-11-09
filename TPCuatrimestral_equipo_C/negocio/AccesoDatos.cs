@@ -48,6 +48,11 @@ namespace negocio
             lector = comando.ExecuteReader();
         }
 
+        public void EjecutarAccion()
+        {
+            conexion.Open();
+            comando.ExecuteNonQuery();
+        }
 
         public SqlDataReader Lector
         {
