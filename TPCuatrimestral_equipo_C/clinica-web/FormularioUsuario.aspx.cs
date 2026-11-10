@@ -16,6 +16,12 @@ namespace clinica_web
             if (!IsPostBack)
             {
                 CargarMedicos();
+
+                if (Request.QueryString["id"] != null)
+                {
+                    int id = int.Parse(Request.QueryString["id"]);
+                    CargarUsuario(id);
+                }
             }
         }
 
@@ -30,6 +36,30 @@ namespace clinica_web
 
             ddlMedico.Items.Insert(0, new ListItem("Seleccione un médico", ""));
             // agrega la opción «Seleccione un médico» al principio
+        }
+
+        private void CargarUsuario(int id)
+        {
+            // Al editar, la contraseña no es obligatoria porque conservamos la actual
+            rfvContrasenia.Enabled = false; 
+
+            UsuarioNegocio negocio = new UsuarioNegocio();
+            Usuario usuario = negocio.BuscarPorId(id);
+
+            // Cambia el título cuando estamos editando un usuario.
+            lblTitulo.Text = "Modificar usuario";
+
+            if (usuario != null)
+            {
+                txtNombreUsuario.Text = usuario.NombreUsuario;
+                ddlTipo.SelectedValue = usuario.Tipo.ToString();//selecciona automáticamente su tipo
+
+                if (usuario.Medico != null)
+                {
+                    divMedico.Visible = true;
+                    ddlMedico.SelectedValue = usuario.Medico.Id.ToString();
+                }
+            }
         }
 
         protected void ddlTipo_SelectedIndexChanged(object sender, EventArgs e)
@@ -70,7 +100,20 @@ namespace clinica_web
             try
             {
                 UsuarioNegocio negocio = new UsuarioNegocio();
-                negocio.Agregar(usuario);
+
+                // // Si la URL contiene un ID, estamos editando un usuario existente
+                if (Request.QueryString["id"] != null)
+                {
+                    // Obtenemos el ID de la URL y lo convertimos a enterox
+                    usuario.Id = int.Parse(Request.QueryString["id"]);
+
+                    // Actualizamos los datos del usuario en la base de datos
+                    negocio.Modificar(usuario);
+                }
+                else
+                {     // Si no hay ID en la URL, agregamos un usuario nuevo.
+                    negocio.Agregar(usuario);
+                }
             }
             catch (Exception ex)
             {

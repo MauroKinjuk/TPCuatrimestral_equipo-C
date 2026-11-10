@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Master.Master" AutoEventWireup="true" CodeBehind="TurnosTrabajo.aspx.cs" Inherits="clinica_web.TurnosTrabajo" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 
@@ -11,6 +12,7 @@
         </div>
 
         <div class="card-body">
+            <a href="FormularioTurnoTrabajo.aspx" class="btn btn-primary mb-3">Nuevo turno de trabajo</a>
             <asp:GridView ID="dgvTurnosTrabajo" runat="server"
                 CssClass="table table-striped"
                 AutoGenerateColumns="false"
@@ -31,22 +33,22 @@
 
                     <asp:TemplateField HeaderText="Acciones">
                         <ItemTemplate>
-                           <asp:LinkButton ID="btnEditar"
-                            runat="server"
-                            Text="Editar"
-                            CssClass="btn btn-outline-secondary btn-sm" 
-                            CommandName="EditarTurno"
-                            CommandArgument='<%# Eval("Id") %>'/>
+                            <asp:LinkButton ID="btnEditar"
+                                runat="server"
+                                Text="Editar"
+                                CssClass="btn btn-outline-secondary btn-sm"
+                                CommandName="EditarTurno"
+                                CommandArgument='<%# Eval("Id") %>' />
 
-                           <asp:LinkButton ID="btnEliminar"
+                            <asp:LinkButton ID="btnEliminar"
                                 runat="server"
                                 Text="Eliminar"
                                 CssClass="btn btn-outline-danger btn-sm"
                                 CommandName="EliminarTurno"
                                 CommandArgument='<%# Eval("Id") %>'
                                 OnClientClick="return confirm('¿Está seguro de que desea eliminar este turno de trabajo?');" />
-                       </ItemTemplate>
-                   </asp:TemplateField>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                 </Columns>
 
             </asp:GridView>

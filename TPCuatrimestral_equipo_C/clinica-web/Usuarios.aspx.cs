@@ -21,5 +21,22 @@ namespace clinica_web
                 dgvUsuarios.DataBind();
             }
         }
+
+        protected void btnEliminar_Click(object sender, EventArgs e)
+        {
+            // Obtenemos el botón Eliminar que se presionó.
+            LinkButton boton = (LinkButton)sender;
+
+            // Obtenemos el ID del usuario seleccionado.
+            int id = int.Parse(boton.CommandArgument);
+
+            // Realizamos la baja lógica del usuario.
+            UsuarioNegocio negocio = new UsuarioNegocio();
+            negocio.Eliminar(id);
+
+            // Actualizamos el listado para mostrar solamente usuarios activos.
+            dgvUsuarios.DataSource = negocio.Listar();
+            dgvUsuarios.DataBind();
+        }
     }
 }
