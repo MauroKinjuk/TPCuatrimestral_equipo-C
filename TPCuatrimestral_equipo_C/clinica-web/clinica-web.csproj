@@ -62,8 +62,10 @@
   <ItemGroup>
     <Content Include="Default.aspx" />
     <Content Include="FormularioTurnoTrabajo.aspx" />
+    <Content Include="FormularioUsuario.aspx" />
     <Content Include="Global.asax" />
     <Content Include="TurnosTrabajo.aspx" />
+    <Content Include="Usuarios.aspx" />
     <Content Include="Web.config" />
     <Content Include="Pacientes.aspx" />
     <Content Include="FormularioPaciente.aspx" />
@@ -85,6 +87,13 @@
     </Compile>
     <Compile Include="FormularioTurnoTrabajo.aspx.designer.cs">
       <DependentUpon>FormularioTurnoTrabajo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FormularioUsuario.aspx.cs">
+      <DependentUpon>FormularioUsuario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FormularioUsuario.aspx.designer.cs">
+      <DependentUpon>FormularioUsuario.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -138,6 +147,13 @@
     </Compile>
     <Compile Include="TurnosTrabajo.aspx.designer.cs">
       <DependentUpon>TurnosTrabajo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Usuarios.aspx.cs">
+      <DependentUpon>Usuarios.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Usuarios.aspx.designer.cs">
+      <DependentUpon>Usuarios.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
