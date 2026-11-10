@@ -70,6 +70,7 @@
     <Content Include="Web.config" />
     <Content Include="Pacientes.aspx" />
     <Content Include="FormularioPaciente.aspx" />
+    <Content Include="ObrasSociales.aspx" />
     <Content Include="Medicos.aspx" />
     <Content Include="Especialidades.aspx" />
     <Content Include="Turnos.aspx" />
@@ -127,6 +128,13 @@
     </Compile>
     <Compile Include="FormularioPaciente.aspx.designer.cs">
       <DependentUpon>FormularioPaciente.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ObrasSociales.aspx.cs">
+      <DependentUpon>ObrasSociales.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ObrasSociales.aspx.designer.cs">
+      <DependentUpon>ObrasSociales.aspx</DependentUpon>
     </Compile>
     <Compile Include="Medicos.aspx.cs">
       <DependentUpon>Medicos.aspx</DependentUpon>
