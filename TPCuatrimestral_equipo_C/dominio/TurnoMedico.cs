@@ -14,5 +14,6 @@ namespace dominio
         public EstadoTurno Estado { get; set; }
         public DateTime Fecha { get; set; }
         public TimeSpan Hora { get; set; }
+        public string Observaciones { get; set; }
     }
 }

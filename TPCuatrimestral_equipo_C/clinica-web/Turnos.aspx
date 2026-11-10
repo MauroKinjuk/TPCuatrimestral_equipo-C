@@ -69,6 +69,19 @@
                         <asp:ListItem Value="4">No Asistió</asp:ListItem>
                         <asp:ListItem Value="5">Cerrado</asp:ListItem>
                     </asp:DropDownList>
+
+                </div>
+                <!-- Observaciones del turno -->
+                <div class="col-12 mb-3">
+                    <label for="txtObservaciones" class="form-label">Observaciones</label>
+                    <asp:TextBox
+                        ID="txtObservaciones"
+                        runat="server"
+                        CssClass="form-control"
+                        TextMode="MultiLine"
+                        Rows="3"
+                        MaxLength="500">
+                    </asp:TextBox>
                 </div>
             </div>
 

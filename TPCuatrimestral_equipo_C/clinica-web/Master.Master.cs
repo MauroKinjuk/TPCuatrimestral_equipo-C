@@ -11,6 +11,9 @@ namespace clinica_web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Ocultamos el menú de navegación solamente en la pantalla de Login.
+            navPrincipal.Visible = !Request.AppRelativeCurrentExecutionFilePath
+                .Equals("~/Login.aspx", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
