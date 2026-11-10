@@ -1,10 +1,11 @@
-﻿using System;
+﻿using dominio;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SqlClient;
-using dominio;
 
 namespace negocio
 {
@@ -13,6 +14,7 @@ namespace negocio
         private SqlConnection conexion;
         private SqlCommand comando;
         private SqlDataReader lector;
+        private SqlTransaction transaccion;
 
 
         // constructor
@@ -41,6 +43,47 @@ namespace negocio
         public void SetearParametro(string nombre, object valor)
         {
             comando.Parameters.AddWithValue(nombre, valor);
+        }
+
+        public void AbrirConexion()
+        {
+            if (conexion.State == ConnectionState.Closed)
+                conexion.Open();
+        }
+
+        public void IniciarTransaccion()
+        {
+            AbrirConexion();
+
+            transaccion = conexion.BeginTransaction();
+            comando.Transaction = transaccion;
+        }
+
+        public void ConfirmarTransaccion()
+        {
+            transaccion.Commit();
+
+            // Desvinculacion de la transaccion y liberacion de recursos
+            comando.Transaction = null;
+            transaccion.Dispose();
+            transaccion = null;
+
+            CerrarConexion();
+        }
+
+        public void RevertirTransaccion()
+        {
+            if (transaccion != null)
+            {
+                transaccion.Rollback();
+
+                // Desvinculacion de la transaccion y liberacion de recursos
+                comando.Transaction = null;
+                transaccion.Dispose();
+                transaccion = null;
+            }
+
+            CerrarConexion();
         }
 
         public void EjecutarLectura()
