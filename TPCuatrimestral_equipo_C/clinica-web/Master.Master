@@ -36,25 +36,40 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
-                            role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Turnos de trabajo
-                           </a>
+                                role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">Turnos de trabajo
+                            </a>
 
-                           <ul class="dropdown-menu">
-                              <li>
-                                 <a class="dropdown-item" href="~/TurnosTrabajo.aspx" runat="server">
-                                    Listado de turnos de trabajo
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="~/FormularioTurnoTrabajo.aspx" runat="server">
-                                   Agregar turno de trabajo
-                               </a>
-                           </li>
-                        </ul>
-                           </li>
-                         </ul>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="~/TurnosTrabajo.aspx" runat="server">Listado de turnos de trabajo
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="~/FormularioTurnoTrabajo.aspx" runat="server">Agregar turno de trabajo
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#"
+                                role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">Usuarios
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="~/Usuarios.aspx" runat="server">Listado de usuarios
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="~/FormularioUsuario.aspx" runat="server">Nuevo usuario
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
