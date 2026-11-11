@@ -17,7 +17,7 @@ namespace negocio
 
             try
             {
-                datos.SetearConsulta("SELECT id, nombre FROM obras_sociales ORDER BY nombre");
+                datos.SetearConsulta("SELECT id, nombre FROM obras_sociales WHERE activo = 1 ORDER BY nombre");
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
@@ -107,7 +107,8 @@ namespace negocio
 
             try
             {
-                datos.SetearConsulta("DELETE FROM obras_sociales WHERE id = @id");
+                // Solamente cambiamos su estado de activo (1) a inactivo (0).
+                datos.SetearConsulta("UPDATE obras_sociales SET activo = 0 WHERE id = @id");
                 datos.SetearParametro("@id", id);
                 datos.EjecutarAccion();
             }
