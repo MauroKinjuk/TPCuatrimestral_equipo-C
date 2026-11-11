@@ -23,7 +23,8 @@ namespace negocio
                     @"SELECT m.id, m.nombre, m.apellido, m.matricula, e.id AS id_especialidad, e.nombre AS especialidad
                     FROM medicos m
                     INNER JOIN medicos_especialidades me ON m.id = me.id_medico
-                    INNER JOIN especialidades e ON me.id_especialidad = e.id");
+                    INNER JOIN especialidades e ON me.id_especialidad = e.id
+                    WHERE m.activo = 1");
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
@@ -60,10 +61,13 @@ namespace negocio
                     FROM medicos m
                     INNER JOIN medicos_especialidades me ON m.id = me.id_medico
                     INNER JOIN especialidades e ON me.id_especialidad = e.id
-                    WHERE m.nombre LIKE @filtro
-                    OR m.apellido LIKE @filtro
-                    OR m.matricula LIKE @filtro
-                    OR e.nombre LIKE @filtro");
+                    WHERE m.activo = 1
+                    AND (
+                        m.nombre LIKE @filtro
+                        OR m.apellido LIKE @filtro
+                        OR m.matricula LIKE @filtro
+                        OR e.nombre LIKE @filtro
+                    )");
                 datos.SetearParametro("@filtro", "%" + texto + "%");
                 datos.EjecutarLectura();
 
@@ -108,7 +112,8 @@ namespace negocio
                     FROM medicos m
                     INNER JOIN medicos_especialidades me ON m.id = me.id_medico
                     INNER JOIN especialidades e ON me.id_especialidad = e.id
-                    WHERE m.id = @id");
+                    WHERE m.id = @id
+                    AND m.activo = 1");
                 datos.SetearParametro("@id", id);
                 datos.EjecutarLectura();
 
@@ -202,7 +207,8 @@ namespace negocio
                         nombre = @nombre,
                         apellido = @apellido,
                         matricula = @matricula
-                    WHERE id = @id");
+                    WHERE id = @id
+                    AND m.activo = 1");
 
                 CargarParametros(datos, medico);
                 datos.SetearParametro("@id", medico.Id);
