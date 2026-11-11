@@ -15,31 +15,35 @@ namespace negocio
         public List<Medico> Listar()
         {
             List<Medico> lista = new List<Medico>();
-
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                datos.SetearConsulta("SELECT id, nombre, apellido, matricula FROM medicos");
+                datos.SetearConsulta(
+                    @"SELECT m.id, m.nombre, m.apellido, m.matricula, e.id AS id_especialidad, e.nombre AS especialidad
+                    FROM medicos m
+                    INNER JOIN medicos_especialidades me ON m.id = me.id_medico
+                    INNER JOIN especialidades e ON me.id_especialidad = e.id");
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
                 {
-                    Medico medico = new Medico();
+                    int idMedico = (int)datos.Lector["id"];
+                    Medico medico = lista.Find(x => x.Id == idMedico);
 
-                    medico.Id = (int)datos.Lector["id"];
-                    medico.Nombre = (string)datos.Lector["nombre"];
-                    medico.Apellido = (string)datos.Lector["apellido"];
-                    medico.Matricula = (string)datos.Lector["matricula"];
+                    if (medico == null)
+                    {
+                        medico = LeerMedico(datos.Lector);
+                        lista.Add(medico);
+                    }
 
-                    lista.Add(medico);
+                    AgregarEspecialidad(medico, datos.Lector);
                 }
             }
             finally
             {
                 datos.CerrarConexion();
             }
-
 
             return lista;
         }
