@@ -21,7 +21,8 @@ namespace negocio
                 datos.SetearConsulta(@"SELECT p.id, p.nombre, p.apellido, p.dni, p.fecha_nacimiento, p.telefono, p.email, p.direccion, p.nro_afiliado,
                                             os.id AS id_obra_social, os.nombre AS obra_social
                                      FROM pacientes p
-                                     LEFT JOIN obras_sociales os ON os.id = p.id_obra_social");
+                                     LEFT JOIN obras_sociales os ON os.id = p.id_obra_social
+                                     WHERE p.activo = 1");
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
@@ -53,7 +54,7 @@ namespace negocio
                                             os.id AS id_obra_social, os.nombre AS obra_social
                                      FROM pacientes p
                                      LEFT JOIN obras_sociales os ON os.id = p.id_obra_social
-                                     WHERE p.nombre LIKE @filtro OR p.apellido LIKE @filtro OR p.dni LIKE @filtro");
+                                     WHERE p.activo = 1 AND (p.nombre LIKE @filtro OR p.apellido LIKE @filtro OR p.dni LIKE @filtro)");
                 datos.SetearParametro("@filtro", "%" + texto + "%");
                 datos.EjecutarLectura();
 
@@ -86,7 +87,7 @@ namespace negocio
                                             os.id AS id_obra_social, os.nombre AS obra_social
                                      FROM pacientes p
                                      LEFT JOIN obras_sociales os ON os.id = p.id_obra_social
-                                     WHERE p.id = @id");
+                                     WHERE p.id = @id AND p.activo = 1");
                 datos.SetearParametro("@id", id);
                 datos.EjecutarLectura();
 
@@ -183,7 +184,8 @@ namespace negocio
 
             try
             {
-                datos.SetearConsulta("DELETE FROM pacientes WHERE id = @id");
+                // Solamente cambiamos su estado de activo (1) a inactivo (0).
+                datos.SetearConsulta("UPDATE pacientes SET activo = 0 WHERE id = @id");
                 datos.SetearParametro("@id", id);
                 datos.EjecutarAccion();
             }
