@@ -67,8 +67,6 @@ namespace negocio
             comando.Transaction = null;
             transaccion.Dispose();
             transaccion = null;
-
-            CerrarConexion();
         }
 
         public void RevertirTransaccion()
@@ -82,8 +80,6 @@ namespace negocio
                 transaccion.Dispose();
                 transaccion = null;
             }
-
-            CerrarConexion();
         }
 
         public void EjecutarLectura()

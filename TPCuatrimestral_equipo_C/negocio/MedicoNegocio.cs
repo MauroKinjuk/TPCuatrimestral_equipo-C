@@ -174,6 +174,10 @@ namespace negocio
                 datos.RevertirTransaccion();
                 throw new Exception("Error al agregar medico.", ex);
             }
+            finally
+            {
+                datos.CerrarConexion();
+            }
         }
 
         public void Modificar(Medico medico)
@@ -224,6 +228,10 @@ namespace negocio
             {
                 datos.RevertirTransaccion();
                 throw new Exception("Error al modificar medico.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
             }
         }
 
