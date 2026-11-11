@@ -39,8 +39,25 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#"
+                                role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">Pacientes
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="~/Pacientes.aspx" runat="server">Listado de pacientes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="~/FormularioPaciente.aspx" runat="server">Nuevo paciente
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="~/Pacientes.aspx" runat="server">Pacientes</a>
+                            <a class="nav-link" href="~/ObrasSociales.aspx" runat="server">Obras Sociales</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="~/Medicos.aspx" runat="server">Médicos</a>
