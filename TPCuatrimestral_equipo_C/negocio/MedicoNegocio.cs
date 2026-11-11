@@ -131,19 +131,133 @@ namespace negocio
             return medico;
         }
 
-        // Agregar
+        public void Agregar(Medico medico)
+        {
+            if (ExisteMatricula(medico.Matricula, medico.Id))
+            {
+                throw new Exception("Ya existe un medico registrado con esa matricula.");
+            }
 
-        // Modificar
+            AccesoDatos datos = new AccesoDatos();
 
-        // Eliminar (baja logica?)
+            try
+            {
+                datos.IniciarTransaccion();
+                // Agrega el medico a la DB y devuelve el id que se le asigno
+                datos.SetearConsulta(
+                    @"INSERT INTO medicos (nombre, apellido, matricula)
+                    VALUES (@nombre, @apellido, @matricula);
+                    SELECT CAST(SCOPE_IDENTITY() AS INT);");
 
-        // TODO = Hacer matricula UNIQUE en la DB
+                CargarParametros(datos, medico);
+
+                medico.Id = (int)datos.EjecutarScalar();
+
+                // Se guardan todas las especialidades del medico
+                foreach (Especialidad e in medico.Especialidades)
+                {
+                    datos.SetearConsulta(
+                        @"INSERT INTO medicos_especialidades (id_medico, id_especialidad)
+                        VALUES (@idMedico, @idEspecialidad);");
+
+                    datos.SetearParametro("@idMedico", medico.Id);
+                    datos.SetearParametro("@idEspecialidad", e.Id);
+
+                    datos.EjecutarAccion();
+                }
+
+                datos.ConfirmarTransaccion();
+            }
+            catch (Exception ex)
+            {
+                // Si hay un error revertimos los inserts anteriores
+                datos.RevertirTransaccion();
+                throw new Exception("Error al agregar medico.", ex);
+            }
+        }
+
+        public void Modificar(Medico medico)
+        {
+            if (ExisteMatricula(medico.Matricula, medico.Id))
+            {
+                throw new Exception("Ya existe un medico registrado con esa matricula.");
+            }
+
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.IniciarTransaccion();
+                // Modifica datos de medico
+                datos.SetearConsulta(
+                    @"UPDATE medicos SET
+                        nombre = @nombre,
+                        apellido = @apellido,
+                        matricula = @matricula
+                    WHERE id = @id");
+
+                CargarParametros(datos, medico);
+                datos.SetearParametro("@id", medico.Id);
+                datos.EjecutarAccion();
+
+                // Elimina las especialidades actuales del medico
+                datos.SetearConsulta("DELETE FROM medicos_especialidades WHERE id_medico = @idMedico");
+                datos.SetearParametro("@idMedico", medico.Id);
+                datos.EjecutarAccion();
+
+                // Agrega las nuevas especialidades al medico
+                foreach (Especialidad e in medico.Especialidades)
+                {
+                    datos.SetearConsulta(
+                        @"INSERT INTO medicos_especialidades (id_medico, id_especialidad)
+                        VALUES (@idMedico, @idEspecialidad);");
+
+                    datos.SetearParametro("@idMedico", medico.Id);
+                    datos.SetearParametro("@idEspecialidad", e.Id);
+
+                    datos.EjecutarAccion();
+                }
+
+                datos.ConfirmarTransaccion();
+            }
+            catch (Exception ex)
+            {
+                datos.RevertirTransaccion();
+                throw new Exception("Error al modificar medico.", ex);
+            }
+        }
+
+        public void Eliminar(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"UPDATE medicos 
+                    SET activo = 0
+                    WHERE id = @id");
+
+                datos.SetearParametro("@id", id);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al eliminar el medico.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
         public bool ExisteMatricula(string matricula, int idExcluir)
         {
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
+                // Devuelve el numero de matriculas que coincide con la matricula del medico excluyendo la de el
                 datos.SetearConsulta("SELECT COUNT(*) FROM medicos WHERE matricula = @matricula AND id <> @idExcluir");
                 datos.SetearParametro("@matricula", matricula);
                 datos.SetearParametro("@idExcluir", idExcluir);
