@@ -14,7 +14,8 @@ GO
 
 CREATE TABLE obras_sociales (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL UNIQUE
+    nombre VARCHAR(100) NOT NULL UNIQUE,
+    activo BIT NOT NULL DEFAULT 1
 );
 GO
 
@@ -29,7 +30,8 @@ CREATE TABLE medicos (
     id INT IDENTITY(1,1) PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
-    matricula VARCHAR(50) NOT NULL UNIQUE
+    matricula VARCHAR(50) NOT NULL UNIQUE,
+    activo BIT NOT NULL DEFAULT 1
 );
 GO
 
@@ -61,6 +63,7 @@ CREATE TABLE pacientes (
     email VARCHAR(150) NOT NULL,
     direccion VARCHAR(255) NULL,
     nro_afiliado VARCHAR(50) NULL,
+    activo BIT NOT NULL DEFAULT 1,
 
     CONSTRAINT fk_pacientes_obras_sociales
         FOREIGN KEY (id_obra_social)
@@ -86,6 +89,7 @@ CREATE TABLE turnos_trabajo (
     dia_semana VARCHAR(20) NOT NULL,
     hora_inicio TIME NOT NULL,
     hora_fin TIME NOT NULL,
+    activo BIT NOT NULL DEFAULT 1,
 
     CONSTRAINT fk_turnostrabajo_medicos
         FOREIGN KEY (id_medico)
@@ -100,6 +104,7 @@ CREATE TABLE turnos (
     id_estado_turno INT NOT NULL,
     fecha_turno DATE NOT NULL,
     hora_turno TIME NOT NULL,
+    observaciones VARCHAR(500) NULL,
 
     CONSTRAINT fk_turnos_pacientes
         FOREIGN KEY (id_paciente)
@@ -136,11 +141,12 @@ GO
 CREATE TABLE usuarios (
     id INT IDENTITY(1,1) PRIMARY KEY,
     nombre_usuario VARCHAR(50) NOT NULL UNIQUE,
-    contrasenia VARCHAR(50) NOT NULL,
+    contrasenia VARCHAR(255) NOT NULL,
     tipo VARCHAR(20) NOT NULL
         CONSTRAINT ck_usuarios_tipo
         CHECK (tipo IN ('Administrador', 'Recepcionista', 'Medico')),
     id_medico INT NULL,
+    activo BIT NOT NULL DEFAULT 1,
 
     CONSTRAINT fk_usuarios_medicos
         FOREIGN KEY (id_medico)
