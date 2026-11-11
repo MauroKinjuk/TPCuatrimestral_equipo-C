@@ -4,6 +4,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
+    <asp:HiddenField ID="hfId" runat="server" />
+
     <asp:Panel ID="pnlMensaje" runat="server" Visible="false" CssClass="alert alert-danger">
         <asp:Label ID="lblMensaje" runat="server"></asp:Label>
     </asp:Panel>
@@ -18,7 +20,10 @@
                 <label for="txtNombre" class="form-label">Nombre</label>
                 <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" placeholder="Ingresar nombre de la obra social"></asp:TextBox>
             </div>
-            <asp:Button ID="btnGuardar" runat="server" Text="Guardar" CssClass="btn btn-primary" OnClick="btnGuardar_Click" />
+            <div class="d-flex gap-2">
+                <asp:Button ID="btnGuardar" runat="server" Text="Guardar" CssClass="btn btn-primary" OnClick="btnGuardar_Click" />
+                <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary" Visible="false" OnClick="btnCancelar_Click" />
+            </div>
         </div>
     </div>
 
@@ -30,13 +35,24 @@
                     AutoGenerateColumns="False"
                     CssClass="table table-striped align-middle mb-0"
                     GridLines="None"
-                    UseAccessibleHeader="True">
+                    UseAccessibleHeader="True"
+                    OnRowCommand="dgvObrasSociales_RowCommand">
 
                     <HeaderStyle CssClass="table-dark" />
 
                     <Columns>
                         <asp:BoundField DataField="Id" HeaderText="ID" HeaderStyle-CssClass="ps-4" ItemStyle-CssClass="ps-4" />
                         <asp:BoundField DataField="Nombre" HeaderText="Obra Social" />
+
+                        <asp:TemplateField HeaderText="Acciones" HeaderStyle-CssClass="text-end pe-4" ItemStyle-CssClass="text-end pe-4">
+                            <ItemTemplate>
+                                <asp:Button ID="btnEditar" runat="server" Text="Editar" CssClass="btn btn-sm btn-outline-secondary me-1"
+                                    CommandName="Editar" CommandArgument='<%# Eval("Id") %>' />
+                                <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-sm btn-outline-danger"
+                                    CommandName="Eliminar" CommandArgument='<%# Eval("Id") %>'
+                                    OnClientClick="return confirm('¿Seguro que querés eliminar esta obra social?');" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
                     </Columns>
 
                 </asp:GridView>
