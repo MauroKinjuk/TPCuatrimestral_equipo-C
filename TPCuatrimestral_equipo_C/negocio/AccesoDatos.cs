@@ -84,20 +84,20 @@ namespace negocio
 
         public void EjecutarLectura()
         {
-            conexion.Open();
+            AbrirConexion();
             lector = comando.ExecuteReader();
         }
 
         public void EjecutarAccion()
         {
-            conexion.Open();
+            AbrirConexion();
             comando.ExecuteNonQuery();
         }
 
 
         public object EjecutarScalar()
         {
-            conexion.Open();
+            AbrirConexion();
             return comando.ExecuteScalar();
         }
 
