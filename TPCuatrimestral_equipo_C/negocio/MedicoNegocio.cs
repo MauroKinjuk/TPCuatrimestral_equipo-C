@@ -41,6 +41,10 @@ namespace negocio
                     AgregarEspecialidad(medico, datos.Lector);
                 }
             }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al listar los medicos.", ex);
+            }
             finally
             {
                 datos.CerrarConexion();
@@ -208,7 +212,7 @@ namespace negocio
                         apellido = @apellido,
                         matricula = @matricula
                     WHERE id = @id
-                    AND m.activo = 1");
+                    AND activo = 1");
 
                 CargarParametros(datos, medico);
                 datos.SetearParametro("@id", medico.Id);

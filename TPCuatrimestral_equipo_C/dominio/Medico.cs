@@ -8,6 +8,12 @@ namespace dominio
 {
     public class Medico
     {
+        public Medico()
+        {
+            Especialidades = new List<Especialidad>();
+            TurnosTrabajo = new List<TurnoTrabajo>();
+        }
+
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
