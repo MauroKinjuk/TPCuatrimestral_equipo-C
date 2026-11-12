@@ -3,7 +3,6 @@ using dominio;
 using negocio;
 using System;
 using System.Collections.Generic;
-using System.Web.UI;
 
 namespace clinica_web
 {

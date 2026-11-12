@@ -1,9 +1,6 @@
 ﻿using dominio;
 using negocio;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -41,7 +38,7 @@ namespace clinica_web
         private void CargarUsuario(int id)
         {
             // Al editar, la contraseña no es obligatoria porque conservamos la actual
-            rfvContrasenia.Enabled = false; 
+            rfvContrasenia.Enabled = false;
 
             UsuarioNegocio negocio = new UsuarioNegocio();
             Usuario usuario = negocio.BuscarPorId(id);
@@ -67,7 +64,7 @@ namespace clinica_web
             divMedico.Visible = ddlTipo.SelectedValue == "Medico";
             //muestra o no      //obtiene el valor seleccionado del desplegable
 
-         //Si seleccionamos Médico, el campo aparece. Si seleccionamos Administrador o Recepcionista, desaparece
+            //Si seleccionamos Médico, el campo aparece. Si seleccionamos Administrador o Recepcionista, desaparece
         }
 
         protected void btnGuardar_Click(object sender, EventArgs e)
@@ -126,5 +123,5 @@ namespace clinica_web
         }
     }
 
-   
-    }
+
+}

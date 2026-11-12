@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using dominio;
+﻿using dominio;
 using negocio;
+using System;
+using System.Web.UI.WebControls;
 
 namespace clinica_web
 {
@@ -136,7 +132,7 @@ namespace clinica_web
 
             // cuando se registre correctamente un horario, aparecerá el mensaje en verde debajo del botón Guardar
             lblMensaje.CssClass = "d-block mt-2 text-success";
-           
+
         }
     }
 }

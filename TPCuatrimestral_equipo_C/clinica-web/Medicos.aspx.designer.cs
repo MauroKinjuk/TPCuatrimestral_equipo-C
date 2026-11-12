@@ -15,58 +15,49 @@ namespace clinica_web
     {
 
         /// <summary>
-        /// txtNombre control.
+        /// pnlMensaje control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNombre;
+        protected global::System.Web.UI.WebControls.Panel pnlMensaje;
 
         /// <summary>
-        /// txtApellido control.
+        /// lblMensaje control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtApellido;
+        protected global::System.Web.UI.WebControls.Label lblMensaje;
 
         /// <summary>
-        /// txtMatricula control.
+        /// txtBuscar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMatricula;
+        protected global::System.Web.UI.WebControls.TextBox txtBuscar;
 
         /// <summary>
-        /// ddlEspecialidad control.
+        /// btnBuscar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlEspecialidad;
+        protected global::System.Web.UI.WebControls.Button btnBuscar;
 
         /// <summary>
-        /// ddlTurno control.
+        /// btnNuevo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTurno;
-
-        /// <summary>
-        /// btnGuardar control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGuardar;
+        protected global::System.Web.UI.WebControls.Button btnNuevo;
 
         /// <summary>
         /// dgvMedicos control.
