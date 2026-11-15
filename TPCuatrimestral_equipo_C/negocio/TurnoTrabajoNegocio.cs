@@ -62,6 +62,61 @@ namespace negocio
             return lista;
         }
 
+
+
+        public List<TurnoTrabajo> Filtrar(string texto)
+        {
+            List<TurnoTrabajo> lista = new List<TurnoTrabajo>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT T.id AS IdTurnoTrabajo, T.id_medico AS IdMedico,
+                     T.dia_semana, T.hora_inicio, T.hora_fin,
+                     M.nombre, M.apellido, M.matricula
+              FROM turnos_trabajo T
+              INNER JOIN medicos M ON T.id_medico = M.id
+              WHERE T.activo = 1
+             AND (M.nombre COLLATE Latin1_General_CI_AI LIKE @filtro
+                 OR M.apellido COLLATE Latin1_General_CI_AI LIKE @filtro
+                 OR T.dia_semana COLLATE Latin1_General_CI_AI LIKE @filtro)
+              ORDER BY M.apellido, M.nombre, T.hora_inicio");
+
+                datos.SetearParametro("@filtro", "%" + texto + "%");
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    TurnoTrabajo turnoTrabajo = new TurnoTrabajo();
+
+                    turnoTrabajo.Medico = new Medico();
+
+                    turnoTrabajo.Id = (int)datos.Lector["IdTurnoTrabajo"];
+                    turnoTrabajo.Medico.Id = (int)datos.Lector["IdMedico"];
+                    turnoTrabajo.Medico.Nombre = (string)datos.Lector["nombre"];
+                    turnoTrabajo.Medico.Apellido = (string)datos.Lector["apellido"];
+                    turnoTrabajo.Medico.Matricula = (string)datos.Lector["matricula"];
+                    turnoTrabajo.DiaSemana = (string)datos.Lector["dia_semana"];
+                    turnoTrabajo.HoraInicio = (TimeSpan)datos.Lector["hora_inicio"];
+                    turnoTrabajo.HoraFin = (TimeSpan)datos.Lector["hora_fin"];
+
+                    lista.Add(turnoTrabajo);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al filtrar los turnos de trabajo.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return lista;
+        }
+
+
         public TurnoTrabajo BuscarPorId(int id)
         {
             List<TurnoTrabajo> lista = Listar();

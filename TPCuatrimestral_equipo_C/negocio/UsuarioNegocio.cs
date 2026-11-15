@@ -63,6 +63,53 @@ namespace negocio
         }
 
 
+        public List<Usuario> Filtrar(string texto)
+        {
+            List<Usuario> lista = new List<Usuario>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT id, nombre_usuario, tipo, id_medico
+              FROM usuarios
+              WHERE activo = 1
+              AND (nombre_usuario LIKE @filtro  
+                   OR tipo LIKE @filtro)");
+
+                //permite encontrar el texto aunque esté en medio de una palabra
+                datos.SetearParametro("@filtro", "%" + texto + "%");
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Usuario usuario = new Usuario();
+
+                    usuario.Id = (int)datos.Lector["id"];
+                    usuario.NombreUsuario = (string)datos.Lector["nombre_usuario"];
+
+                    usuario.Tipo = (TipoUsuario)Enum.Parse(
+                        typeof(TipoUsuario),
+                        (string)datos.Lector["tipo"]);
+
+                    if (datos.Lector["id_medico"] != DBNull.Value)
+                    {
+                        usuario.Medico = new Medico();
+                        usuario.Medico.Id = (int)datos.Lector["id_medico"];
+                    }
+
+                    lista.Add(usuario);
+                }
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return lista;
+        }
+
+
         public void Agregar(Usuario usuario)
         {
             AccesoDatos datos = new AccesoDatos();

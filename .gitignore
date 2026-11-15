@@ -426,3 +426,5 @@ FodyWeavers.xsd
 
 # Official VS Code C# Dev Kit Extension exclusion
 #*.lscache
+/TPCuatrimestral_equipo_C/clinica-web.zip
+/TPCuatrimestral_equipo_C/negocio.zip

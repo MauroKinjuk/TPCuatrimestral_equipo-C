@@ -34,5 +34,14 @@ namespace clinica_web
             dgvUsuarios.DataSource = negocio.Listar();
             dgvUsuarios.DataBind();
         }
+
+        // Filtramos los usuarios según el texto ingresado.
+        protected void btnBuscar_Click(object sender, EventArgs e)
+        {
+            UsuarioNegocio negocio = new UsuarioNegocio();
+
+            dgvUsuarios.DataSource = negocio.Filtrar(txtFiltro.Text.Trim());
+            dgvUsuarios.DataBind();
+        }
     }
 }

@@ -33,7 +33,6 @@ namespace clinica_web
                 Response.Redirect("FormularioTurnoTrabajo.aspx?id=" + idTurno);
             }
 
-
             if (e.CommandName == "EliminarTurno")
             {
                 // Obtenemos el ID del horario seleccionado.
@@ -48,6 +47,19 @@ namespace clinica_web
                 dgvTurnosTrabajo.DataSource = negocio.Listar();
                 dgvTurnosTrabajo.DataBind();
             }
+        }
+
+
+        protected void btnBuscar_Click(object sender, EventArgs e)
+        {
+            // Creamos el objeto de la capa de negocio.
+            TurnoTrabajoNegocio negocio = new TurnoTrabajoNegocio();
+
+            // Filtramos según el texto ingresado en el buscador.
+            dgvTurnosTrabajo.DataSource = negocio.Filtrar(txtFiltro.Text.Trim()); //elimina espacios sobrantes
+
+            // Actualizamos la tabla con los resultados.
+            dgvTurnosTrabajo.DataBind();
         }
 
     }
