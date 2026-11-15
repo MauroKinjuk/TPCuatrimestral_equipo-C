@@ -77,8 +77,7 @@ namespace clinica_web
             catch (Exception ex)
             {
                 pnlMensaje.Visible = true;
-                //lblMensaje.Text = ex.Message;
-                lblMensaje.Text = ex.GetBaseException().Message;
+                lblMensaje.Text = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
             }
         }
 

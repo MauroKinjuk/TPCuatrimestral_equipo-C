@@ -62,6 +62,7 @@
   <ItemGroup>
     <Content Include="content\especialidades_cbl.css" />
     <Content Include="Default.aspx" />
+    <Content Include="FormularioEspecialidad.aspx" />
     <Content Include="FormularioMedico.aspx" />
     <Content Include="FormularioTurnoTrabajo.aspx" />
     <Content Include="FormularioUsuario.aspx" />
@@ -84,6 +85,13 @@
     </Compile>
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FormularioEspecialidad.aspx.cs">
+      <DependentUpon>FormularioEspecialidad.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FormularioEspecialidad.aspx.designer.cs">
+      <DependentUpon>FormularioEspecialidad.aspx</DependentUpon>
     </Compile>
     <Compile Include="FormularioMedico.aspx.cs">
       <DependentUpon>FormularioMedico.aspx</DependentUpon>
