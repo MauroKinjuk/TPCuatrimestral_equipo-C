@@ -210,6 +210,52 @@ namespace negocio
         }
 
 
+        public bool Loguear(Usuario usuario)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT id, tipo, id_medico
+                       FROM usuarios
+                       WHERE nombre_usuario = @nombre_usuario
+                       AND contrasenia = @contrasenia
+                       AND activo = 1");
+
+                datos.SetearParametro("@nombre_usuario", usuario.NombreUsuario);
+                datos.SetearParametro("@contrasenia", usuario.Contrasenia);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    usuario.Id = (int)datos.Lector["id"];
+                    usuario.Tipo = (TipoUsuario)Enum.Parse(
+                        typeof(TipoUsuario),
+                        (string)datos.Lector["tipo"]);
+
+                    if (datos.Lector["id_medico"] != DBNull.Value)
+                    {
+                        usuario.Medico = new Medico();
+                        usuario.Medico.Id = (int)datos.Lector["id_medico"];
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al intentar iniciar sesión.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
         public void Modificar(Usuario usuario)
         {
             AccesoDatos datos = new AccesoDatos();
