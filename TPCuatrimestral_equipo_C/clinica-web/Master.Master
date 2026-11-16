@@ -33,7 +33,7 @@
                                     <a class="dropdown-item" href="~/Default.aspx" runat="server">Página principal
                                     </a>
                                 </li>
-                                <li>
+                                <li id="liIniciarSesion" runat="server">
                                      <%-- Acceso al formulario de inicio de sesión --%>
                                     <a class="dropdown-item" href="~/Login.aspx" runat="server">Iniciar sesión
                                     </a>
@@ -133,6 +133,24 @@
                             </ul>
                         </li>
                         
+                    </ul>
+
+                    <%-- Usuario logueado, a la derecha del navbar --%>
+                    <ul class="navbar-nav ms-auto">
+                        <li id="liUsuario" runat="server" visible="false" class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#"
+                                role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <asp:Label ID="lblNombreUsuario" runat="server" />
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <asp:LinkButton ID="btnCerrarSesion" runat="server"
+                                        CssClass="dropdown-item"
+                                        OnClick="btnCerrarSesion_Click">Cerrar sesión</asp:LinkButton>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
