@@ -41,12 +41,16 @@
                             CssClass="form-control" />
                     </div>
 
-                    <%-- Botón de ingreso: por ahora solamente visual --%>
                     <div class="d-grid mt-4">
                         <asp:Button ID="btnIngresar" runat="server"
                             Text="Ingresar"
-                            CssClass="btn btn-primary" />
+                            CssClass="btn btn-primary"
+                            OnClick="btnIngresar_Click" />
                     </div>
+
+                    <asp:Panel ID="pnlMensaje" runat="server" Visible="false" CssClass="alert alert-danger mt-3 mb-0">
+                        <asp:Label ID="lblMensaje" runat="server"></asp:Label>
+                    </asp:Panel>
                     <%-- Permite volver al sistema mientras desarrollamos el proyecto --%>
                     <div class="text-center mt-3">
                         <a href="Default.aspx" class="btn btn-outline-secondary">Volver al inicio
