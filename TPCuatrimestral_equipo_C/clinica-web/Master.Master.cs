@@ -25,6 +25,22 @@ namespace clinica_web
                 liIniciarSesion.Visible = false;
                 liUsuario.Visible = true;
                 lblNombreUsuario.Text = usuario.NombreUsuario;
+
+                if (usuario.Tipo == TipoUsuario.Recepcionista)
+                {
+                    liUsuarios.Visible = false;
+                    liTurnosTrabajo.Visible = false;
+                    liEspecialidades.Visible = false;
+                }
+                else if (usuario.Tipo == TipoUsuario.Medico)
+                {
+                    liUsuarios.Visible = false;
+                    liTurnosTrabajo.Visible = false;
+                    liEspecialidades.Visible = false;
+                    liPacientes.Visible = false;
+                    liObrasSociales.Visible = false;
+                    liMedicos.Visible = false;
+                }
             }
         }
 

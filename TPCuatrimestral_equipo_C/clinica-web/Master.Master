@@ -40,7 +40,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li id="liPacientes" runat="server" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
                                 role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">Pacientes
@@ -57,10 +57,10 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
+                        <li id="liObrasSociales" runat="server" class="nav-item">
                             <a class="nav-link" href="~/ObrasSociales.aspx" runat="server">Obras Sociales</a>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li id="liMedicos" runat="server" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
                                 role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">Medicos
@@ -77,7 +77,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li id="liEspecialidades" runat="server" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
                                 role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">Especialidades
@@ -97,7 +97,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="~/Turnos.aspx" runat="server">Turnos</a>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li id="liTurnosTrabajo" runat="server" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
                                 role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">Turnos de trabajo
@@ -115,7 +115,7 @@
                             </ul>
                         </li>
 
-                        <li class="nav-item dropdown">
+                        <li id="liUsuarios" runat="server" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
                                 role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">Usuarios
