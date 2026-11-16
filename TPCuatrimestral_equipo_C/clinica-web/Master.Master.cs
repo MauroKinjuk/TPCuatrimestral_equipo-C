@@ -7,11 +7,18 @@ namespace clinica_web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Ocultamos el menú de navegación solamente en la pantalla de Login.
-            navPrincipal.Visible = !Request.AppRelativeCurrentExecutionFilePath
+            bool esLogin = Request.AppRelativeCurrentExecutionFilePath
                 .Equals("~/Login.aspx", StringComparison.OrdinalIgnoreCase);
 
-            // Si hay un usuario en sesión mostramos su nombre y ocultamos "Iniciar sesión".
+            if (!esLogin && Session["usuario"] == null)
+            {
+                Response.Redirect("~/Login.aspx", false);
+                return;
+            }
+
+            // Ocultamos el menú de navegación solamente en la pantalla de Login.
+            navPrincipal.Visible = !esLogin;
+
             Usuario usuario = Session["usuario"] as Usuario;
             if (usuario != null)
             {

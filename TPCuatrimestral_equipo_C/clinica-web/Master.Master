@@ -135,7 +135,6 @@
                         
                     </ul>
 
-                    <%-- Usuario logueado, a la derecha del navbar --%>
                     <ul class="navbar-nav ms-auto">
                         <li id="liUsuario" runat="server" visible="false" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"

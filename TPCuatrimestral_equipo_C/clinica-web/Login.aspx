@@ -51,11 +51,6 @@
                     <asp:Panel ID="pnlMensaje" runat="server" Visible="false" CssClass="alert alert-danger mt-3 mb-0">
                         <asp:Label ID="lblMensaje" runat="server"></asp:Label>
                     </asp:Panel>
-                    <%-- Permite volver al sistema mientras desarrollamos el proyecto --%>
-                    <div class="text-center mt-3">
-                        <a href="Default.aspx" class="btn btn-outline-secondary">Volver al inicio
-                        </a>
-                    </div>
 
                 </div>
             </div>
