@@ -1,6 +1,7 @@
 using dominio;
 using negocio;
 using System;
+using System.Web.UI.WebControls;
 
 namespace clinica_web
 {
@@ -25,6 +26,14 @@ namespace clinica_web
                 }
 
                 dgvTurnos.DataBind();
+            }
+        }
+
+        protected void dgvTurnos_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Diagnostico")
+            {
+                Response.Redirect("FormularioConsulta.aspx?id=" + e.CommandArgument);
             }
         }
     }

@@ -15,7 +15,8 @@
                     CssClass="table table-striped align-middle mb-0"
                     GridLines="None"
                     UseAccessibleHeader="True"
-                    EmptyDataText="No tenés turnos asignados.">
+                    EmptyDataText="No tenés turnos asignados."
+                    OnRowCommand="dgvTurnos_RowCommand">
 
                     <HeaderStyle CssClass="table-dark" />
 
@@ -44,6 +45,13 @@
 
                         <asp:TemplateField HeaderText="Diagnóstico">
                             <ItemTemplate><%# Eval("Consulta.Diagnostico") %></ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="Acciones" HeaderStyle-CssClass="text-end pe-4" ItemStyle-CssClass="text-end pe-4">
+                            <ItemTemplate>
+                                <asp:Button ID="btnDiagnostico" runat="server" Text="Cargar diagnóstico" CssClass="btn btn-sm btn-outline-secondary"
+                                    CommandName="Diagnostico" CommandArgument='<%# Eval("Id") %>' />
+                            </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
                 </asp:GridView>

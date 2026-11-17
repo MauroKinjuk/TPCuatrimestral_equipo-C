@@ -7,6 +7,17 @@ namespace negocio
 {
     public class TurnoNegocio
     {
+        private const string consultaTurnos =
+            @"SELECT T.id, T.fecha_turno, T.hora_turno, T.observaciones,
+                     T.id_medico,
+                     P.id AS id_paciente, P.nombre AS nombre_paciente, P.apellido AS apellido_paciente,
+                     E.id AS id_estado, E.nombre AS nombre_estado,
+                     C.id AS id_consulta, C.motivo, C.diagnostico
+              FROM turnos T
+              INNER JOIN pacientes P ON T.id_paciente = P.id
+              INNER JOIN estados_turno E ON T.id_estado_turno = E.id
+              LEFT JOIN consultas C ON C.id_turno = T.id";
+
         public List<TurnoMedico> ListarPorMedico(int idMedico)
         {
             List<TurnoMedico> lista = new List<TurnoMedico>();
@@ -14,17 +25,9 @@ namespace negocio
 
             try
             {
-                datos.SetearConsulta(
-                    @"SELECT T.id, T.fecha_turno, T.hora_turno, T.observaciones,
-                             P.id AS id_paciente, P.nombre AS nombre_paciente, P.apellido AS apellido_paciente,
-                             E.id AS id_estado, E.nombre AS nombre_estado,
-                             C.id AS id_consulta, C.motivo, C.diagnostico
-                      FROM turnos T
-                      INNER JOIN pacientes P ON T.id_paciente = P.id
-                      INNER JOIN estados_turno E ON T.id_estado_turno = E.id
-                      LEFT JOIN consultas C ON C.id_turno = T.id
-                      WHERE T.id_medico = @idMedico
-                      ORDER BY T.fecha_turno, T.hora_turno");
+                datos.SetearConsulta(consultaTurnos +
+                    @" WHERE T.id_medico = @idMedico
+                       ORDER BY T.fecha_turno, T.hora_turno");
 
                 datos.SetearParametro("@idMedico", idMedico);
                 datos.EjecutarLectura();
@@ -46,6 +49,34 @@ namespace negocio
             return lista;
         }
 
+        public TurnoMedico BuscarPorId(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            TurnoMedico turno = null;
+
+            try
+            {
+                datos.SetearConsulta(consultaTurnos + " WHERE T.id = @id");
+                datos.SetearParametro("@id", id);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    turno = MapearTurno(datos);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al buscar el turno.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return turno;
+        }
+
         private static TurnoMedico MapearTurno(AccesoDatos datos)
         {
             TurnoMedico turno = new TurnoMedico();
@@ -58,6 +89,9 @@ namespace negocio
             {
                 turno.Observaciones = (string)datos.Lector["observaciones"];
             }
+
+            turno.Medico = new Medico();
+            turno.Medico.Id = (int)datos.Lector["id_medico"];
 
             turno.Paciente = new Paciente();
             turno.Paciente.Id = (int)datos.Lector["id_paciente"];
