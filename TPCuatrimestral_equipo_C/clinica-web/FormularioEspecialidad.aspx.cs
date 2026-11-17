@@ -13,6 +13,12 @@ namespace clinica_web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Seguridad.TieneAcceso(Session["usuario"], TipoUsuario.Administrador))
+            {
+                Response.Redirect("~/Default.aspx", false);
+                return;
+            }
+
             if (!IsPostBack)
             {
                 string id = Request.QueryString["id"];

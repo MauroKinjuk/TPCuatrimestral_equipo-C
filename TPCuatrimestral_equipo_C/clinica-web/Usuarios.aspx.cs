@@ -1,4 +1,5 @@
-﻿using negocio;
+﻿using dominio;
+using negocio;
 using System;
 using System.Web.UI.WebControls;
 
@@ -9,6 +10,12 @@ namespace clinica_web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Seguridad.TieneAcceso(Session["usuario"], TipoUsuario.Administrador))
+            {
+                Response.Redirect("~/Default.aspx", false);
+                return;
+            }
+
             if (!IsPostBack)
             {
                 UsuarioNegocio negocio = new UsuarioNegocio();

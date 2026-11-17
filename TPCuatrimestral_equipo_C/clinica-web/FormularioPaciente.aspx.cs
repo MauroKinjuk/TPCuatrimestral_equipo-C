@@ -11,6 +11,12 @@ namespace clinica_web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Seguridad.TieneAcceso(Session["usuario"], TipoUsuario.Administrador, TipoUsuario.Recepcionista))
+            {
+                Response.Redirect("~/Default.aspx", false);
+                return;
+            }
+
             if (!IsPostBack)
             {
                 cargarObrasSociales();
