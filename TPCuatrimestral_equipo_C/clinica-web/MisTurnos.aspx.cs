@@ -16,6 +16,14 @@ namespace clinica_web
 
             if (!IsPostBack)
             {
+                Usuario usuario = (Usuario)Session["usuario"];
+
+                if (usuario.Medico != null)
+                {
+                    TurnoNegocio negocio = new TurnoNegocio();
+                    dgvTurnos.DataSource = negocio.ListarPorMedico(usuario.Medico.Id);
+                }
+
                 dgvTurnos.DataBind();
             }
         }
