@@ -40,6 +40,8 @@ namespace clinica_web
                     liPacientes.Visible = false;
                     liObrasSociales.Visible = false;
                     liMedicos.Visible = false;
+
+                    linkTurnos.HRef = "~/MisTurnos.aspx";
                 }
             }
         }

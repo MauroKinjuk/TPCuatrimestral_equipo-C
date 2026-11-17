@@ -87,6 +87,15 @@ namespace clinica_web
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl liEspecialidades;
 
         /// <summary>
+        /// linkTurnos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor linkTurnos;
+
+        /// <summary>
         /// liTurnosTrabajo control.
         /// </summary>
         /// <remarks>
