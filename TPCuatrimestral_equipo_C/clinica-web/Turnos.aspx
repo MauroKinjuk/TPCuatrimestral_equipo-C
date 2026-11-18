@@ -13,12 +13,10 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="ddlEspecialidad" class="form-label">Especialidad</label>
-                    <asp:DropDownList ID="ddlEspecialidad" runat="server" CssClass="form-select">
-                        <asp:ListItem Text="Seleccione una especialidad..." Value="" Selected="True"></asp:ListItem>
-                        <asp:ListItem Value="1">Cardiología</asp:ListItem>
-                        <asp:ListItem Value="2">Pediatría</asp:ListItem>
-                        <asp:ListItem Value="3">Traumatología</asp:ListItem>
-                        <asp:ListItem Value="4">Clínica Médica</asp:ListItem>
+                    <asp:DropDownList
+                        ID="ddlEspecialidad"
+                        runat="server"
+                        CssClass="form-select">
                     </asp:DropDownList>
                 </div>
 
