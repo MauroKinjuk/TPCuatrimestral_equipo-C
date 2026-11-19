@@ -11,6 +11,16 @@
         </div>
         <div class="card-body">
             <div class="row">
+                <!-- Paciente -->
+                <div class="col-12 mb-3">
+                    <label for="ddlPaciente" class="form-label">Paciente</label>
+                    <asp:DropDownList
+                        ID="ddlPaciente"
+                        runat="server"
+                        CssClass="form-select">
+                    </asp:DropDownList>
+                </div>
+                <!-- Especialidad -->
                 <div class="col-md-6 mb-3">
                     <label for="ddlEspecialidad" class="form-label">Especialidad</label>
                     <asp:DropDownList
@@ -22,66 +32,54 @@
                     </asp:DropDownList>
                 </div>
 
+                <!-- Médico -->
                 <div class="col-md-6 mb-3">
                     <label for="ddlMedico" class="form-label">Médico</label>
                     <asp:DropDownList
                         ID="ddlMedico"
-                        runat="server" 
-                        CssClass="form-select">
-                      </asp:DropDownList>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label for="txtFecha" class="form-label">Fecha y Hora</label>
-                    <div class="d-flex gap-2">
-                        <asp:TextBox ID="txtFecha" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                        <asp:DropDownList ID="DropDownList2" runat="server" CssClass="form-select">
-                            <asp:ListItem Text="Seleccione un horario..." Value="" Selected="True" Enabled="False"></asp:ListItem>
-                            <asp:ListItem Text="06:00" Value="06:00:00"></asp:ListItem>
-                            <asp:ListItem Text="07:00" Value="07:00:00"></asp:ListItem>
-                            <asp:ListItem Text="08:00" Value="08:00:00"></asp:ListItem>
-                            <asp:ListItem Text="09:00" Value="09:00:00"></asp:ListItem>
-                            <asp:ListItem Text="10:00" Value="10:00:00"></asp:ListItem>
-                            <asp:ListItem Text="11:00" Value="11:00:00"></asp:ListItem>
-                            <asp:ListItem Text="12:00" Value="12:00:00"></asp:ListItem>
-                            <asp:ListItem Text="13:00" Value="13:00:00"></asp:ListItem>
-                            <asp:ListItem Text="14:00" Value="14:00:00"></asp:ListItem>
-                            <asp:ListItem Text="15:00" Value="15:00:00"></asp:ListItem>
-                            <asp:ListItem Text="16:00" Value="16:00:00"></asp:ListItem>
-                            <asp:ListItem Text="17:00" Value="17:00:00"></asp:ListItem>
-                            <asp:ListItem Text="18:00" Value="18:00:00"></asp:ListItem>
-                            <asp:ListItem Text="19:00" Value="19:00:00"></asp:ListItem>
-                            <asp:ListItem Text="20:00" Value="20:00:00"></asp:ListItem>
-                            <asp:ListItem Text="21:00" Value="21:00:00"></asp:ListItem>
-                            <asp:ListItem Text="22:00" Value="22:00:00"></asp:ListItem>
-                            <asp:ListItem Text="23:00" Value="23:00:00"></asp:ListItem>
-                        </asp:DropDownList>
-                    </div>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label for="ddlEstadoTurno" class="form-label">Estado</label>
-                    <asp:DropDownList ID="ddlEstadoTurno" runat="server" CssClass="form-select">
-                        <asp:ListItem Value="1" Selected="True">Nuevo</asp:ListItem>
-                        <asp:ListItem Value="2">Reprogramado</asp:ListItem>
-                        <asp:ListItem Value="3">Cancelado</asp:ListItem>
-                        <asp:ListItem Value="4">No Asistió</asp:ListItem>
-                        <asp:ListItem Value="5">Cerrado</asp:ListItem>
+                        runat="server"
+                        CssClass="form-select"
+                        AutoPostBack="true"
+                        OnSelectedIndexChanged="ddlMedico_SelectedIndexChanged">
                     </asp:DropDownList>
-
                 </div>
-                <!-- Observaciones del turno -->
-                <div class="col-12 mb-3">
-                    <label for="txtObservaciones" class="form-label">Observaciones</label>
+
+                <!-- Fecha -->
+                <div class="col-md-6 mb-3">
+                    <label for="txtFecha" class="form-label">Fecha</label>
                     <asp:TextBox
-                        ID="txtObservaciones"
+                        ID="txtFecha"
                         runat="server"
                         CssClass="form-control"
-                        TextMode="MultiLine"
-                        Rows="3"
-                        MaxLength="500">
+                        TextMode="Date"
+                        AutoPostBack="true"
+                        OnTextChanged="txtFecha_TextChanged">
                     </asp:TextBox>
                 </div>
+
+                <!-- Horarios disponibles -->
+                <div class="col-12 mb-3">
+                    <label class="form-label">Horarios disponibles</label>
+                    <asp:Panel
+                        ID="pnlHorariosDisponibles"
+                        runat="server"
+                        CssClass="d-flex flex-wrap gap-2">
+                        <span class="text-muted">Seleccione un médico y una fecha para consultar los horarios disponibles.</span>
+                    </asp:Panel>
+                </div>
+
+            </div>
+            <!-- Observaciones del turno -->
+            <div class="col-12 mb-3">
+                <label for="txtObservaciones" class="form-label">Observaciones</label>
+                <asp:TextBox
+                    ID="txtObservaciones"
+                    runat="server"
+                    CssClass="form-control"
+                    TextMode="MultiLine"
+                    Rows="3"
+                    MaxLength="500">
+                </asp:TextBox>
             </div>
 
             <div class="text-end mt-2">

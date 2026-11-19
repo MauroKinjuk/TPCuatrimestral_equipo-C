@@ -16,8 +16,23 @@ namespace clinica_web
 
             if (!IsPostBack)
             {
+                CargarPacientes();
                 CargarEspecialidades();
             }
+        }
+
+        private void CargarPacientes()
+        {
+            PacienteNegocio negocio = new PacienteNegocio();
+
+            ddlPaciente.DataSource = negocio.Listar();
+            ddlPaciente.DataTextField = "NombreCompleto";
+            ddlPaciente.DataValueField = "Id";
+            ddlPaciente.DataBind();
+
+            ddlPaciente.Items.Insert(0,
+                new System.Web.UI.WebControls.ListItem(
+                    "Seleccione un paciente...", ""));
         }
 
         private void CargarEspecialidades()
@@ -35,37 +50,47 @@ namespace clinica_web
                     "Seleccione una especialidad...", ""));
         }
 
-        protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
+        private void CargarMedicos()
         {
-            //limpia los médicos anteriores.
-            ddlMedico.Items.Clear();
-
-            //verifica que hayas seleccionado una especialidad válida
-            if (string.IsNullOrEmpty(ddlEspecialidad.SelectedValue))
-            {
-                //agrega la opción inicial «Seleccione un médico...»
-                ddlMedico.Items.Insert(0,
-                    new System.Web.UI.WebControls.ListItem(
-                        "Seleccione un médico...", ""));
-                return;
-            }
-
             int idEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
-
             MedicoNegocio negocio = new MedicoNegocio();
 
             ddlMedico.DataSource = negocio.ListarPorEspecialidad(idEspecialidad);
-            ddlMedico.DataTextField = "Apellido";
+            ddlMedico.DataTextField = "NombreCompleto";
             ddlMedico.DataValueField = "Id";
             ddlMedico.DataBind();
 
             ddlMedico.Items.Insert(0,
                 new System.Web.UI.WebControls.ListItem(
-                    "Seleccione un médico...", ""));
+                    "Seleccione un Medico...", ""));
         }
 
-
         protected void btnAsignar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Limpia los medicos anteriores y sus horarios
+            ddlMedico.Items.Clear();
+            pnlHorariosDisponibles.Controls.Clear();
+
+            // Verifica que este seleccionada una especialidad
+            if (string.IsNullOrEmpty(ddlEspecialidad.SelectedValue))
+            {
+                return;
+            }
+
+            CargarMedicos();
+        }
+
+        protected void ddlMedico_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void txtFecha_TextChanged(object sender, EventArgs e)
         {
 
         }

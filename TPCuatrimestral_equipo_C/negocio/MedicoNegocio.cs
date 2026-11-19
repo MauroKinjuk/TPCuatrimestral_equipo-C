@@ -53,7 +53,6 @@ namespace negocio
             return lista;
         }
 
-
         public List<Medico> ListarPorEspecialidad(int idEspecialidad)
         {
             List<Medico> lista = new List<Medico>();
@@ -62,27 +61,34 @@ namespace negocio
             try
             {
                 datos.SetearConsulta(
-                    @"SELECT m.id, m.nombre, m.apellido, m.matricula
-                      FROM medicos m
-                      INNER JOIN medicos_especialidades me
-                          ON m.id = me.id_medico
-                      WHERE me.id_especialidad = @idEspecialidad
-                      AND m.activo = 1
-                      ORDER BY m.apellido, m.nombre");
+                    @"SELECT m.id, m.nombre, m.apellido, m.matricula,
+                     e.id AS id_especialidad, e.nombre AS especialidad
+                    FROM medicos m
+                    INNER JOIN medicos_especialidades me ON m.id = me.id_medico
+                    INNER JOIN especialidades e ON me.id_especialidad = e.id
+                    WHERE m.activo = 1
+                    AND e.id = @idEspecialidad");
 
                 datos.SetearParametro("@idEspecialidad", idEspecialidad);
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
                 {
-                    Medico medico = LeerMedico(datos.Lector);
-                    lista.Add(medico);
+                    int idMedico = (int)datos.Lector["id"];
+                    Medico medico = lista.Find(x => x.Id == idMedico);
+
+                    if (medico == null)
+                    {
+                        medico = LeerMedico(datos.Lector);
+                        lista.Add(medico);
+                    }
+
+                    AgregarEspecialidad(medico, datos.Lector);
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception(
-                    "Error al listar médicos por especialidad.", ex);
+                throw new Exception("Error al listar los médicos por especialidad.", ex);
             }
             finally
             {
@@ -91,7 +97,6 @@ namespace negocio
 
             return lista;
         }
-
 
         public List<Medico> Filtrar(string texto)
         {
