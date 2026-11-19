@@ -53,6 +53,46 @@ namespace negocio
             return lista;
         }
 
+
+        public List<Medico> ListarPorEspecialidad(int idEspecialidad)
+        {
+            List<Medico> lista = new List<Medico>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT m.id, m.nombre, m.apellido, m.matricula
+                      FROM medicos m
+                      INNER JOIN medicos_especialidades me
+                          ON m.id = me.id_medico
+                      WHERE me.id_especialidad = @idEspecialidad
+                      AND m.activo = 1
+                      ORDER BY m.apellido, m.nombre");
+
+                datos.SetearParametro("@idEspecialidad", idEspecialidad);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Medico medico = LeerMedico(datos.Lector);
+                    lista.Add(medico);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    "Error al listar médicos por especialidad.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return lista;
+        }
+
+
         public List<Medico> Filtrar(string texto)
         {
             List<Medico> medicos = new List<Medico>();

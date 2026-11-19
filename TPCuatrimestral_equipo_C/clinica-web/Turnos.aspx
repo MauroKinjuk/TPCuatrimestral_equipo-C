@@ -16,18 +16,19 @@
                     <asp:DropDownList
                         ID="ddlEspecialidad"
                         runat="server"
-                        CssClass="form-select">
+                        CssClass="form-select"
+                        AutoPostBack="true"
+                        OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged">
                     </asp:DropDownList>
                 </div>
 
                 <div class="col-md-6 mb-3">
                     <label for="ddlMedico" class="form-label">Médico</label>
-                    <asp:DropDownList ID="ddlMedico" runat="server" CssClass="form-select">
-                        <asp:ListItem Text="Seleccione un médico..." Value="" Selected="True"></asp:ListItem>
-                        <asp:ListItem Value="1">Dr. Roberto Fernández</asp:ListItem>
-                        <asp:ListItem Value="2">Dra. Laura Martínez</asp:ListItem>
-                        <asp:ListItem Value="3">Dr. Diego López</asp:ListItem>
-                    </asp:DropDownList>
+                    <asp:DropDownList
+                        ID="ddlMedico"
+                        runat="server" 
+                        CssClass="form-select">
+                      </asp:DropDownList>
                 </div>
 
                 <div class="col-md-6 mb-3">

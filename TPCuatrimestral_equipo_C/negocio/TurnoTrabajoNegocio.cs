@@ -261,5 +261,66 @@ namespace negocio
             return false;
         }
 
+
+        public List<TurnoTrabajo> ListarPorMedicoYDia(int idMedico, string diaSemana)
+        {
+            List<TurnoTrabajo> lista = new List<TurnoTrabajo>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT T.id AS IdTurnoTrabajo,
+                             T.id_medico AS IdMedico,
+                             T.dia_semana,
+                             T.hora_inicio,
+                             T.hora_fin,
+                             M.nombre,
+                             M.apellido,
+                             M.matricula
+                      FROM turnos_trabajo T
+                      INNER JOIN medicos M ON T.id_medico = M.id
+                      WHERE T.id_medico = @idMedico
+                        AND T.dia_semana = @diaSemana
+                        AND T.activo = 1
+                        AND M.activo = 1
+                      ORDER BY T.hora_inicio");
+
+                datos.SetearParametro("@idMedico", idMedico);
+                datos.SetearParametro("@diaSemana", diaSemana);
+
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    TurnoTrabajo turno = new TurnoTrabajo();
+
+                    turno.Id = (int)datos.Lector["IdTurnoTrabajo"];
+
+                    turno.Medico = new Medico();
+
+                    turno.Medico.Id = (int)datos.Lector["IdMedico"];
+                    turno.Medico.Nombre = (string)datos.Lector["nombre"];
+                    turno.Medico.Apellido = (string)datos.Lector["apellido"];
+                    turno.Medico.Matricula = (string)datos.Lector["matricula"];
+
+                    turno.DiaSemana = (string)datos.Lector["dia_semana"];
+                    turno.HoraInicio = (TimeSpan)datos.Lector["hora_inicio"];
+                    turno.HoraFin = (TimeSpan)datos.Lector["hora_fin"];
+
+                    lista.Add(turno);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al consultar los horarios del médico.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return lista;
+        }
     }
 }
