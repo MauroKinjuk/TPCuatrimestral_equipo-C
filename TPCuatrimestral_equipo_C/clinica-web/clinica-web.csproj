@@ -78,7 +78,7 @@
     <Content Include="Medicos.aspx" />
     <Content Include="Especialidades.aspx" />
     <Content Include="MisTurnos.aspx" />
-    <Content Include="Turnos.aspx" />
+    <Content Include="FormularioTurno.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Default.aspx.cs">
@@ -183,12 +183,12 @@
     <Compile Include="MisTurnos.aspx.designer.cs">
       <DependentUpon>MisTurnos.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Turnos.aspx.cs">
-      <DependentUpon>Turnos.aspx</DependentUpon>
+    <Compile Include="FormularioTurno.aspx.cs">
+      <DependentUpon>FormularioTurno.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Turnos.aspx.designer.cs">
-      <DependentUpon>Turnos.aspx</DependentUpon>
+    <Compile Include="FormularioTurno.aspx.designer.cs">
+      <DependentUpon>FormularioTurno.aspx</DependentUpon>
     </Compile>
     <Compile Include="TurnosTrabajo.aspx.cs">
       <DependentUpon>TurnosTrabajo.aspx</DependentUpon>

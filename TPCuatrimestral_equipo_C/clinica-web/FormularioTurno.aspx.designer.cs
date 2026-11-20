@@ -15,6 +15,24 @@ namespace clinica_web
     {
 
         /// <summary>
+        /// pnlMensaje control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlMensaje;
+
+        /// <summary>
+        /// lblMensaje control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMensaje;
+
+        /// <summary>
         /// ddlPaciente control.
         /// </summary>
         /// <remarks>
@@ -42,22 +60,22 @@ namespace clinica_web
         protected global::System.Web.UI.WebControls.DropDownList ddlMedico;
 
         /// <summary>
-        /// txtFecha control.
+        /// rptDiasDisponibles control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFecha;
+        protected global::System.Web.UI.WebControls.Repeater rptDiasDisponibles;
 
         /// <summary>
-        /// pnlHorariosDisponibles control.
+        /// rptHorariosDisponibles control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlHorariosDisponibles;
+        protected global::System.Web.UI.WebControls.Repeater rptHorariosDisponibles;
 
         /// <summary>
         /// txtObservaciones control.
