@@ -77,6 +77,46 @@ namespace negocio
             return turno;
         }
 
+
+        public List<TimeSpan> ListarHorariosOcupados(int idMedico, DateTime fecha)
+        {
+            List<TimeSpan> horarios = new List<TimeSpan>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT T.hora_turno
+                      FROM turnos T
+                      INNER JOIN estados_turno E
+                        ON T.id_estado_turno = E.id
+                      WHERE T.id_medico = @idMedico
+                        AND T.fecha_turno = @fecha
+                        AND E.nombre NOT IN ('Cancelado', 'Reprogramado')");
+
+                datos.SetearParametro("@idMedico", idMedico);
+                datos.SetearParametro("@fecha", fecha.Date);
+
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    horarios.Add((TimeSpan)datos.Lector["hora_turno"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al consultar los horarios ocupados.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return horarios;
+        }
+
+
         private static TurnoMedico MapearTurno(AccesoDatos datos)
         {
             TurnoMedico turno = new TurnoMedico();
