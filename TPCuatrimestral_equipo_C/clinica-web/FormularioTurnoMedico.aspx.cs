@@ -213,7 +213,7 @@ namespace clinica_web
         {
             try
             {
-                List<string> errores = validar();
+                List<string> errores = Validar();
 
                 if (errores.Count > 0)
                 {
@@ -249,7 +249,7 @@ namespace clinica_web
                  * TODO = hacer el redirect a la vista con la lista de turnos.
                  * Actualmente solo recarga el formulario.
                  */
-                Response.Redirect("FormularioTurno.aspx");
+                Response.Redirect("FormularioTurnoMedico.aspx");
             }
             catch (Exception ex)
             {
@@ -258,7 +258,7 @@ namespace clinica_web
             }
         }
 
-        private List<string> validar()
+        private List<string> Validar()
         {
             List<string> errores = new List<string>();
 
@@ -285,6 +285,22 @@ namespace clinica_web
             if (ViewState["HoraSeleccionada"] == null)
             {
                 errores.Add("Debe seleccionar un horario.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(ddlPaciente.SelectedValue) &&
+                ViewState["FechaSeleccionada"] != null &&
+                ViewState["HoraSeleccionada"] != null)
+            {
+                int idPaciente = int.Parse(ddlPaciente.SelectedValue);
+                DateTime fecha = (DateTime)ViewState["FechaSeleccionada"];
+                TimeSpan hora = TimeSpan.Parse(ViewState["HoraSeleccionada"].ToString());
+
+                TurnoMedicoNegocio negocio = new TurnoMedicoNegocio();
+
+                if (negocio.ExisteTurnoPaciente(idPaciente, fecha, hora))
+                {
+                    errores.Add("El paciente ya tiene un turno asignado en esa fecha y horario.");
+                }
             }
 
             return errores;

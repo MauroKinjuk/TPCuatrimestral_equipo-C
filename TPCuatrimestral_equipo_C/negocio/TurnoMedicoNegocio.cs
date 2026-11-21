@@ -148,5 +148,36 @@ namespace negocio
                 datos.CerrarConexion();
             }
         }
+
+        public bool ExisteTurnoPaciente(int idPaciente, DateTime fecha, TimeSpan hora)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            bool existe = false;
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT 1 FROM turnos
+                    WHERE id_paciente = @idPaciente
+                    AND id_estado_turno <> 3
+                    AND fecha_turno = @fecha
+                    AND hora_turno = @hora");
+                datos.SetearParametro("@idPaciente", idPaciente);
+                datos.SetearParametro("@fecha", fecha.Date);
+                datos.SetearParametro("@hora", hora);
+
+                existe = datos.EjecutarScalar() != null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al consultar turnos del paciente.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return existe;
+        }
     }
 }
