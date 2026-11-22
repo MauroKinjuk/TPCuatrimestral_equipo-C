@@ -7,14 +7,18 @@ namespace negocio
 {
     public class TurnoNegocio
     {
+
         private const string consultaTurnos =
             @"SELECT T.id, T.fecha_turno, T.hora_turno, T.observaciones,
                      T.id_medico,
+                     M.nombre AS nombre_medico,
+                     M.apellido AS apellido_medico,
                      P.id AS id_paciente, P.nombre AS nombre_paciente, P.apellido AS apellido_paciente,
                      E.id AS id_estado, E.nombre AS nombre_estado,
                      C.id AS id_consulta, C.motivo, C.diagnostico
               FROM turnos T
               INNER JOIN pacientes P ON T.id_paciente = P.id
+              INNER JOIN medicos M ON T.id_medico = M.id
               INNER JOIN estados_turno E ON T.id_estado_turno = E.id
               LEFT JOIN consultas C ON C.id_turno = T.id";
 
@@ -78,6 +82,38 @@ namespace negocio
         }
 
 
+        public List<TurnoMedico> ListarPorPaciente(int idPaciente)
+        {
+            List<TurnoMedico> lista = new List<TurnoMedico>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(consultaTurnos +
+                    @" WHERE T.id_paciente = @idPaciente
+               ORDER BY T.fecha_turno DESC, T.hora_turno DESC");
+
+                datos.SetearParametro("@idPaciente", idPaciente);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    lista.Add(MapearTurno(datos));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al listar el historial del paciente.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return lista;
+        }
+
+
         public List<TimeSpan> ListarHorariosOcupados(int idMedico, DateTime fecha)
         {
             List<TimeSpan> horarios = new List<TimeSpan>();
@@ -132,6 +168,8 @@ namespace negocio
 
             turno.Medico = new Medico();
             turno.Medico.Id = (int)datos.Lector["id_medico"];
+            turno.Medico.Nombre = (string)datos.Lector["nombre_medico"];
+            turno.Medico.Apellido = (string)datos.Lector["apellido_medico"];
 
             turno.Paciente = new Paciente();
             turno.Paciente.Id = (int)datos.Lector["id_paciente"];

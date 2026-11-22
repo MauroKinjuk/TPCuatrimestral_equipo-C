@@ -54,6 +54,10 @@ namespace clinica_web
                     lblMensaje.Text = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 }
             }
+            else if (e.CommandName == "Historial")
+            {
+                Response.Redirect("HistorialPaciente.aspx?id=" + id);
+            }
         }
 
         private void cargarGrilla()

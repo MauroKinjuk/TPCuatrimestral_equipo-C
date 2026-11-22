@@ -52,6 +52,11 @@
                                 <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-sm btn-outline-danger"
                                     CommandName="Eliminar" CommandArgument='<%# Eval("Id") %>'
                                     OnClientClick="return confirm('¿Seguro que querés eliminar este paciente?');" />
+                                <asp:Button ID="btnHistorial" runat="server"
+                                    Text="Ver Historial"
+                                    CssClass="btn btn-sm btn-outline-primary ms-1"
+                                    CommandName="Historial"
+                                    CommandArgument='<%# Eval("Id") %>' />
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
