@@ -97,10 +97,12 @@ CREATE TABLE turnos_trabajo (
 );
 GO
 
+
 CREATE TABLE turnos (
     id INT IDENTITY(1,1) PRIMARY KEY,
     id_paciente INT NOT NULL,
     id_medico INT NOT NULL,
+    id_especialidad INT NOT NULL,
     id_estado_turno INT NOT NULL,
     fecha_turno DATE NOT NULL,
     hora_turno TIME NOT NULL,
@@ -114,6 +116,10 @@ CREATE TABLE turnos (
         FOREIGN KEY (id_medico)
         REFERENCES medicos (id),
 
+    CONSTRAINT fk_turnos_especialidades
+        FOREIGN KEY (id_especialidad)
+        REFERENCES especialidades (id),
+
     CONSTRAINT fk_turnos_estados
         FOREIGN KEY (id_estado_turno)
         REFERENCES estados_turno (id),
@@ -125,6 +131,7 @@ CREATE TABLE turnos (
         UNIQUE (id_paciente, fecha_turno, hora_turno)
 );
 GO
+
 
 CREATE TABLE consultas (
     id INT IDENTITY(1,1) PRIMARY KEY,
@@ -226,14 +233,18 @@ INSERT INTO turnos_trabajo (id_medico, dia_semana, hora_inicio, hora_fin) VALUES
 (5, 'Viernes', '14:00', '18:00');
 GO
 
-INSERT INTO turnos (id_paciente, id_medico, id_estado_turno, fecha_turno, hora_turno) VALUES
-(1, 1, 5, '2026-10-19', '09:00'),
-(2, 2, 4, '2026-10-22', '15:00'),
-(3, 3, 2, '2026-10-26', '10:00'),
-(4, 4, 1, '2026-10-29', '10:00'),
-(5, 5, 1, '2026-10-30', '16:00'),
-(6, 1, 1, '2026-11-02', '11:00');
+
+INSERT INTO turnos
+(id_paciente, id_medico, id_especialidad, id_estado_turno, fecha_turno, hora_turno)
+VALUES
+(1, 1, 1, 5, '2026-10-19', '09:00'),
+(2, 2, 3, 4, '2026-10-22', '15:00'),
+(3, 3, 4, 2, '2026-10-26', '10:00'),
+(4, 4, 5, 1, '2026-10-29', '10:00'),
+(5, 5, 6, 1, '2026-10-30', '16:00'),
+(6, 1, 2, 1, '2026-11-02', '11:00');
 GO
+
 
 INSERT INTO consultas (id_turno, motivo, diagnostico) VALUES
 (1, 'Control de presión arterial', 'Presión dentro de valores normales. Control en 6 meses.'),
