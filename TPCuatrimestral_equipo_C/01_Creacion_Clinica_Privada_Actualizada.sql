@@ -19,7 +19,8 @@ GO
 CREATE TABLE especialidades (
     id INT IDENTITY(1,1) PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL UNIQUE,
-    descripcion VARCHAR(MAX) NULL
+    descripcion VARCHAR(MAX) NULL,
+    activo BIT NOT NULL DEFAULT 1
 );
 GO
 
