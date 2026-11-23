@@ -61,6 +61,83 @@ namespace negocio
             return lista;
         }
 
+        public List<TurnoMedico> ListarPorFecha(DateTime fecha)
+        {
+            List<TurnoMedico> lista = new List<TurnoMedico>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT 
+                        t.id,
+                        t.id_paciente,
+                        p.nombre AS nombre_paciente,
+                        p.apellido AS apellido_paciente,
+                        t.id_especialidad,
+                        e.nombre AS nombre_especialidad,
+                        t.id_medico,
+                        m.nombre AS nombre_medico,
+                        m.apellido AS apellido_medico,
+                        t.id_estado_turno,
+                        et.nombre AS nombre_estado,
+                        t.fecha_turno,
+                        t.hora_turno,
+                        t.observaciones
+                    FROM turnos t
+                    INNER JOIN pacientes p ON p.id = t.id_paciente
+                    INNER JOIN especialidades e ON e.id = t.id_especialidad
+                    INNER JOIN medicos m ON m.id = t.id_medico
+                    INNER JOIN estados_turno et ON et.id = t.id_estado_turno
+                    WHERE t.fecha_turno = @fecha
+                    ORDER BY t.fecha_turno, t.hora_turno");
+                datos.SetearParametro("@fecha", fecha.Date);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    TurnoMedico turno = new TurnoMedico();
+
+                    turno.Id = (int)datos.Lector["id"];
+                    turno.Fecha = (DateTime)datos.Lector["fecha_turno"];
+                    turno.Hora = (TimeSpan)datos.Lector["hora_turno"];
+                    turno.Observaciones = datos.Lector["observaciones"] == DBNull.Value
+                        ? null
+                        : (string)datos.Lector["observaciones"];
+
+                    turno.Paciente = new Paciente();
+                    turno.Paciente.Id = (int)datos.Lector["id_paciente"];
+                    turno.Paciente.Nombre = (string)datos.Lector["nombre_paciente"];
+                    turno.Paciente.Apellido = (string)datos.Lector["apellido_paciente"];
+
+                    turno.Especialidad = new Especialidad();
+                    turno.Especialidad.Id = (int)datos.Lector["id_especialidad"];
+                    turno.Especialidad.Nombre = (string)datos.Lector["nombre_especialidad"];
+
+                    turno.Medico = new Medico();
+                    turno.Medico.Id = (int)datos.Lector["id_medico"];
+                    turno.Medico.Nombre = (string)datos.Lector["nombre_medico"];
+                    turno.Medico.Apellido = (string)datos.Lector["apellido_medico"];
+
+                    turno.Estado = new EstadoTurno();
+                    turno.Estado.Id = (int)datos.Lector["id_estado_turno"];
+                    turno.Estado.Nombre = (string)datos.Lector["nombre_estado"];
+
+                    lista.Add(turno);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al listar los turnos medicos del dia", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return lista;
+        }
+
         public List<TimeSpan> ListarHorariosDisponibles(
             DateTime fecha,
             List<TurnoTrabajo> horariosTrabajo,

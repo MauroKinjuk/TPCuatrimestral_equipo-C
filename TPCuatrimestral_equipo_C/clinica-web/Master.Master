@@ -40,6 +40,7 @@
                                 </li>
                             </ul>
                         </li>
+                        <%-- Pacientes --%>
                         <li id="liPacientes" runat="server" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
                                 role="button" data-bs-toggle="dropdown"
@@ -57,6 +58,7 @@
                                 </li>
                             </ul>
                         </li>
+                        <%-- Obras Sociales--%>
                         <li id="liObrasSociales" runat="server" class="nav-item">
                             <a class="nav-link" href="~/ObrasSociales.aspx" runat="server">Obras Sociales</a>
                         </li>
@@ -77,6 +79,7 @@
                                 </li>
                             </ul>
                         </li>
+                        <%-- Especialidades --%>
                         <li id="liEspecialidades" runat="server" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
                                 role="button" data-bs-toggle="dropdown"
@@ -94,9 +97,29 @@
                                 </li>
                             </ul>
                         </li>
+                        <%-- Turnos Medicos --%>
+                        <li id="liTurnosMedicos" runat="server" class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#"
+                               role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">Turnos Medicos
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="~/TurnosMedicos.aspx" runat="server">Turnos Medicos
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="~/FormularioTurnoMedico.aspx" runat="server">Nueva Turno Medico
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <%-- ??? --%>
                         <li class="nav-item">
                             <a id="linkTurnos" class="nav-link" href="~/FormularioTurnoMedico.aspx" runat="server">Turnos</a>
                         </li>
+                        <%-- Turnos Trabajo --%>
                         <li id="liTurnosTrabajo" runat="server" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
                                 role="button" data-bs-toggle="dropdown"
@@ -114,7 +137,7 @@
                                 </li>
                             </ul>
                         </li>
-
+                        <%-- Usuarios --%>
                         <li id="liUsuarios" runat="server" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
                                 role="button" data-bs-toggle="dropdown"
@@ -134,7 +157,8 @@
                         </li>
                         
                     </ul>
-
+                    
+                    <%-- Usuario actual + cerrar sesion --%>
                     <ul class="navbar-nav ms-auto">
                         <li id="liUsuario" runat="server" visible="false" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
