@@ -124,13 +124,14 @@ namespace negocio
             {
                 datos.SetearConsulta(
                     @"INSERT INTO turnos
-                    (id_paciente, id_medico, id_estado_turno,
+                    (id_paciente, id_especialidad, id_medico, id_estado_turno,
                     fecha_turno, hora_turno, observaciones)
                     VALUES
-                    (@idPaciente, @idMedico, @idEstado,
+                    (@idPaciente, @idMedico, @idEstado, @idEspecialidad,
                     @fecha, @hora, @observaciones)");
 
                 datos.SetearParametro("@idPaciente", turno.Paciente.Id);
+                datos.SetearParametro("@idEspecialidad", turno.Especialidad.Id);
                 datos.SetearParametro("@idMedico", turno.Medico.Id);
                 datos.SetearParametro("@idEstado", turno.Estado.Id);
                 datos.SetearParametro("@fecha", turno.Fecha.Date);

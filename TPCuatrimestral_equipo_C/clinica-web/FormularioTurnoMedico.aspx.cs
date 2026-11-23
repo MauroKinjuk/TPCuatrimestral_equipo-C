@@ -223,6 +223,7 @@ namespace clinica_web
                 }
 
                 int idPaciente = int.Parse(ddlPaciente.SelectedValue);
+                int idEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
                 int idMedico = int.Parse(ddlMedico.SelectedValue);
                 DateTime fecha = (DateTime)ViewState["FechaSeleccionada"];
                 TimeSpan hora = TimeSpan.Parse(ViewState["HoraSeleccionada"].ToString());
@@ -232,9 +233,13 @@ namespace clinica_web
                 turno.Paciente = new Paciente();
                 turno.Paciente.Id = idPaciente;
 
+                turno.Especialidad = new Especialidad();
+                turno.Especialidad.Id = idEspecialidad;
+
                 turno.Medico = new Medico();
                 turno.Medico.Id = idMedico;
 
+                // TODO = Si se pasa un id por url para reprogramar el turno se tiene que guardar ese estado
                 turno.Estado = new EstadoTurno();
                 turno.Estado.Id = 1; // Id nuevo turno
 

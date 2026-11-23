@@ -35,7 +35,6 @@
                         OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged">
                     </asp:DropDownList>
                 </div>
-
                 <!-- Médico -->
                 <div class="col-md-6 mb-3">
                     <label for="ddlMedico" class="form-label">Médico</label>
@@ -47,7 +46,6 @@
                         OnSelectedIndexChanged="ddlMedico_SelectedIndexChanged">
                     </asp:DropDownList>
                 </div>
-
                 <!-- Días disponibles -->
                 <div class="col-12 mb-3">
                     <label class="form-label">Días disponibles</label>
@@ -71,7 +69,6 @@
                         </asp:Repeater>
                     </div>
                 </div>
-
                 <!-- Horarios disponibles -->
                 <div class="col-12 mb-3">
                     <label class="form-label">Horarios disponibles</label>
@@ -95,7 +92,6 @@
                         </asp:Repeater>
                     </div>
                 </div>
-
             </div>
             <!-- Observaciones del turno -->
             <div class="col-12 mb-3">
@@ -109,7 +105,6 @@
                     MaxLength="500">
                 </asp:TextBox>
             </div>
-
             <div class="text-end mt-2">
                 <asp:Button ID="btnAsignar" runat="server" Text="Asignar Turno" CssClass="btn btn-primary px-4" OnClick="btnAsignar_Click" />
             </div>
