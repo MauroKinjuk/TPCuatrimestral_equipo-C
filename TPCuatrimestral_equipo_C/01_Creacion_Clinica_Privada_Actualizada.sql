@@ -1,6 +1,4 @@
-﻿
-
-USE master;
+﻿USE master;
 GO
 
 IF DB_ID('clinica_privada') IS NOT NULL
@@ -13,16 +11,6 @@ END
 GO
 
 CREATE DATABASE clinica_privada
-ON PRIMARY
-(
-    NAME = N'clinica_privada_nueva',
-    FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL17.SQLEXPRESS\MSSQL\DATA\clinica_privada_nueva.mdf'
-)
-LOG ON
-(
-    NAME = N'clinica_privada_nueva_log',
-    FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL17.SQLEXPRESS\MSSQL\DATA\clinica_privada_nueva_log.ldf'
-);
 GO
 
 USE clinica_privada;
