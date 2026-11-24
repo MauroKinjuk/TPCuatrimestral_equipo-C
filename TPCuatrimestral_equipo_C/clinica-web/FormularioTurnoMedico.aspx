@@ -11,7 +11,7 @@
     <!-- Registro Turno -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-white">
-            <h5 class="mb-0 pt-1">Asignar Nuevo Turno</h5>
+            <h5 id="tituloFormulario" runat="server" class="mb-0 pt-1">Asignar Nuevo Turno</h5>
         </div>
         <div class="card-body">
             <div class="row">

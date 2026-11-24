@@ -17,6 +17,7 @@ namespace negocio
 
             try
             {
+                // Lista solamente las especialidades activas.
                 datos.SetearConsulta("SELECT id, nombre, descripcion FROM especialidades WHERE activo = 1");
                 datos.EjecutarLectura();
 

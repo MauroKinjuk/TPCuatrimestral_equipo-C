@@ -22,7 +22,72 @@ namespace clinica_web
             {
                 CargarPacientes();
                 CargarEspecialidades();
+
+                // Verifica si se recibió el ID de un turno por la URL.
+                if (Request.QueryString["id"] != null)
+                {
+                    int idTurno;
+
+                    // Verifica que el ID recibido sea un número entero.
+                    if (int.TryParse(Request.QueryString["id"], out idTurno))
+                    {
+                        CargarTurnoParaReprogramar(idTurno);
+                    }
+                    else
+                    {
+                        Response.Redirect("TurnosMedicos.aspx");
+                    }
+                }
             }
+        }
+
+        // Recupera los datos del turno que se desea reprogramar
+        // y los carga automáticamente en el formulario.
+        private void CargarTurnoParaReprogramar(int idTurno)
+        {
+            TurnoMedicoNegocio negocio = new TurnoMedicoNegocio();
+            TurnoMedico turno = negocio.BuscarPorId(idTurno);
+
+            // Verifica que el turno exista, esté Nuevo o Reprogramado
+            // y que su fecha y hora todavía no hayan llegado.
+            if (turno == null ||
+                (turno.Estado.Id != 1 && turno.Estado.Id != 2) ||
+                turno.Fecha.Date.Add(turno.Hora) <= DateTime.Now)
+            {
+                Response.Redirect("TurnosMedicos.aspx");
+                return;
+            }
+
+            // Selecciona el paciente y la especialidad del turno original.
+            ddlPaciente.SelectedValue = turno.Paciente.Id.ToString();
+            ddlEspecialidad.SelectedValue = turno.Especialidad.Id.ToString();
+
+            // Carga los médicos de la especialidad y selecciona el original.
+            CargarMedicos();
+            ddlMedico.SelectedValue = turno.Medico.Id.ToString();
+
+            // Recupera las observaciones del turno.
+            txtObservaciones.Text = turno.Observaciones;
+
+            // Guarda el ID del turno que estamos reprogramando.
+            ViewState["IdTurnoReprogramar"] = turno.Id;
+
+            // Carga los días disponibles del médico.
+            CargarDiasDisponibles();
+
+            // Deshabilita los campos que no se pueden modificar
+            // al reprogramar un turno.
+            ddlPaciente.Enabled = false;
+            ddlEspecialidad.Enabled = false;
+            ddlMedico.Enabled = false;
+
+            // Cambia el texto del botón para indicar que
+            // se está reprogramando un turno existente.
+            btnAsignar.Text = "Reprogramar Turno";
+
+
+            // Cambia el título del formulario.
+            tituloFormulario.InnerText = "Reprogramar Turno";
         }
 
         private void CargarPacientes()
@@ -248,13 +313,27 @@ namespace clinica_web
                 turno.Observaciones = txtObservaciones.Text;
 
                 TurnoMedicoNegocio negocio = new TurnoMedicoNegocio();
-                negocio.Agregar(turno);
 
-                /*
-                 * TODO = hacer el redirect a la vista con la lista de turnos.
-                 * Actualmente solo recarga el formulario.
-                 */
-                Response.Redirect("FormularioTurnoMedico.aspx");
+                // Verifica si se está reprogramando un turno existente.
+                if (ViewState["IdTurnoReprogramar"] != null)
+                {
+                    // Recupera el ID del turno original.
+                    turno.Id = Convert.ToInt32(ViewState["IdTurnoReprogramar"]);
+
+                    // Cambia el estado a Reprogramado.
+                    turno.Estado.Id = 2;
+
+                    // Actualiza el turno existente en la base de datos.
+                    negocio.ReprogramarTurno(turno);
+                }
+                else
+                {
+                    // Si no se está reprogramando, registra un turno nuevo.
+                    negocio.Agregar(turno);
+                }
+
+                // Regresa al listado de turnos médicos.
+                Response.Redirect("TurnosMedicos.aspx");
             }
             catch (Exception ex)
             {
@@ -305,6 +384,39 @@ namespace clinica_web
                 if (negocio.ExisteTurnoPaciente(idPaciente, fecha, hora))
                 {
                     errores.Add("El paciente ya tiene un turno asignado en esa fecha y horario.");
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(ddlMedico.SelectedValue) &&
+                ViewState["FechaSeleccionada"] != null &&
+                ViewState["HoraSeleccionada"] != null)
+            {
+                int idMedico = int.Parse(ddlMedico.SelectedValue);
+                DateTime fecha = (DateTime)ViewState["FechaSeleccionada"];
+                TimeSpan hora = TimeSpan.Parse(ViewState["HoraSeleccionada"].ToString());
+
+                TurnoMedicoNegocio negocio = new TurnoMedicoNegocio();
+
+                if (negocio.ExisteTurnoMedico(idMedico, fecha, hora))
+                {
+                    errores.Add("El médico ya tiene un turno asignado en esa fecha y horario.");
+                }
+            }
+
+            // Verifica que la fecha y hora seleccionadas sean futuras.
+            // Recupera la fecha y la hora que el usuario seleccionó
+            // previamente y que se guardaron en el ViewState.
+            // Luego verifica que el turno no corresponda a un horario pasado.
+            if (ViewState["FechaSeleccionada"] != null &&
+                ViewState["HoraSeleccionada"] != null)
+            {
+                DateTime fecha = (DateTime)ViewState["FechaSeleccionada"];
+                TimeSpan hora = TimeSpan.Parse(
+                    ViewState["HoraSeleccionada"].ToString());
+
+                if (fecha.Date.Add(hora) <= DateTime.Now)
+                {
+                    errores.Add("La fecha y hora del turno deben ser futuras.");
                 }
             }
 

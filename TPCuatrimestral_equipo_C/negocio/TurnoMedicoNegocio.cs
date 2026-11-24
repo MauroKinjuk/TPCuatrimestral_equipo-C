@@ -202,10 +202,10 @@ namespace negocio
                 datos.SetearConsulta(
                     @"INSERT INTO turnos
                     (id_paciente, id_especialidad, id_medico, id_estado_turno,
-                    fecha_turno, hora_turno, observaciones)
+                     fecha_turno, hora_turno, observaciones)
                     VALUES
-                    (@idPaciente, @idMedico, @idEstado, @idEspecialidad,
-                    @fecha, @hora, @observaciones)");
+                    (@idPaciente, @idEspecialidad, @idMedico, @idEstado,
+                     @fecha, @hora, @observaciones)");
 
                 datos.SetearParametro("@idPaciente", turno.Paciente.Id);
                 datos.SetearParametro("@idEspecialidad", turno.Especialidad.Id);
@@ -228,6 +228,9 @@ namespace negocio
         }
 
         public bool ExisteTurnoPaciente(int idPaciente, DateTime fecha, TimeSpan hora)
+
+        // Evita que un paciente tenga dos turnos simultáneos.
+
         {
             AccesoDatos datos = new AccesoDatos();
             bool existe = false;
@@ -256,6 +259,222 @@ namespace negocio
             }
 
             return existe;
+        }
+
+
+        public bool ExisteTurnoMedico(int idMedico, DateTime fecha, TimeSpan hora)
+
+        // Permite detectar si un médico ya tiene otro paciente asignado en ese horario.
+        {
+            AccesoDatos datos = new AccesoDatos();
+            bool existe = false;
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT 1 FROM turnos
+                      WHERE id_medico = @idMedico
+                      AND id_estado_turno <> 3                        
+                      AND fecha_turno = @fecha
+                      AND hora_turno = @hora");
+
+                datos.SetearParametro("@idMedico", idMedico);
+                datos.SetearParametro("@fecha", fecha.Date);
+                datos.SetearParametro("@hora", hora);
+
+                existe = datos.EjecutarScalar() != null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al consultar turnos del médico.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return existe;
+        }
+
+        public void CancelarTurno(int idTurno)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                // Cancela el turno seleccionado si está Nuevo o Reprogramado
+                // y su fecha y hora todavía no han llegado.
+                datos.SetearConsulta(
+                    @"UPDATE turnos
+                      SET id_estado_turno = 3
+                      WHERE id = @idTurno
+                      AND id_estado_turno IN (1, 2)
+                      AND (fecha_turno > CAST(GETDATE() AS DATE)
+                      OR (fecha_turno = CAST(GETDATE() AS DATE)
+                      AND hora_turno > CAST(GETDATE() AS TIME)))");
+
+                datos.SetearParametro("@idTurno", idTurno);
+
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al cancelar el turno.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public void MarcarNoAsistio(int idTurno)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"UPDATE turnos
+                      SET id_estado_turno = 4
+                      WHERE id = @idTurno
+                      AND id_estado_turno IN (1, 2)
+                      AND (fecha_turno < CAST(GETDATE() AS DATE)
+                      OR (fecha_turno = CAST(GETDATE() AS DATE)
+                      AND hora_turno < CAST(GETDATE() AS TIME)))");
+
+                // Cambia el estado del turno seleccionado a "No Asistió" (ID 4),
+                // siempre que su estado sea Nuevo o Reprogramado (ID 1 o 2)
+                // y que la fecha y hora del turno ya hayan pasado.
+
+                datos.SetearParametro("@idTurno", idTurno);
+
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al marcar el turno como No Asistió.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
+        // Busca un turno por su ID y devuelve sus datos.
+        public TurnoMedico BuscarPorId(int idTurno)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT id, id_paciente, id_especialidad,
+                      id_medico, id_estado_turno, fecha_turno,
+                      hora_turno, observaciones
+                      FROM turnos
+                      WHERE id = @idTurno");
+
+                datos.SetearParametro("@idTurno", idTurno);
+                datos.EjecutarLectura();
+
+                // Si encuentra el turno, carga sus datos.
+                if (datos.Lector.Read())
+                {
+                    TurnoMedico turno = new TurnoMedico();
+
+                    turno.Id = (int)datos.Lector["id"];
+
+                    turno.Paciente = new Paciente();
+                    turno.Paciente.Id = (int)datos.Lector["id_paciente"];
+
+                    turno.Especialidad = new Especialidad();
+                    turno.Especialidad.Id = (int)datos.Lector["id_especialidad"];
+
+                    turno.Medico = new Medico();
+                    turno.Medico.Id = (int)datos.Lector["id_medico"];
+
+                    turno.Estado = new EstadoTurno();
+                    turno.Estado.Id = (int)datos.Lector["id_estado_turno"];
+
+                    turno.Fecha = (DateTime)datos.Lector["fecha_turno"];
+                    turno.Hora = (TimeSpan)datos.Lector["hora_turno"];
+
+                    turno.Observaciones = datos.Lector["observaciones"] == DBNull.Value
+                        ? null
+                        : (string)datos.Lector["observaciones"];
+
+                    return turno;
+                }
+
+                // Si no encuentra el turno, devuelve null.
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al buscar el turno.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        // Modifica la fecha, hora y observaciones de un turno existente
+        // y cambia su estado a Reprogramado.
+        public void ReprogramarTurno(TurnoMedico turno)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                // Reprograma un turno vigente, verificando que el nuevo
+                // horario sea futuro y no esté ocupado por otro turno.
+                datos.SetearConsulta(
+                    @"UPDATE turnos
+                    SET fecha_turno = @fecha,
+                      hora_turno = @hora,
+                      observaciones = @observaciones,
+                      id_estado_turno = 2
+                  WHERE id = @idTurno
+                  AND id_estado_turno IN (1, 2)
+                  AND (fecha_turno > CAST(GETDATE() AS DATE)
+                  OR (fecha_turno = CAST(GETDATE() AS DATE)
+                  AND hora_turno > CAST(GETDATE() AS TIME)))
+                  AND (@fecha > CAST(GETDATE() AS DATE)
+                  OR (@fecha = CAST(GETDATE() AS DATE)
+                  AND @hora > CAST(GETDATE() AS TIME)))
+                  AND NOT EXISTS (
+                      SELECT 1
+                      FROM turnos t
+                      WHERE t.id <> @idTurno
+                      AND t.id_estado_turno <> 3
+                      AND t.fecha_turno = @fecha
+                      AND t.hora_turno = @hora
+                      AND (t.id_medico = turnos.id_medico
+                      OR t.id_paciente = turnos.id_paciente)
+                      );
+
+                    IF @@ROWCOUNT = 0
+                        THROW 50001, 'No se pudo reprogramar el turno.', 1;");
+
+
+                datos.SetearParametro("@fecha", turno.Fecha.Date);
+                datos.SetearParametro("@hora", turno.Hora);
+                datos.SetearParametro("@observaciones",
+                    (object)turno.Observaciones ?? DBNull.Value);
+                datos.SetearParametro("@idTurno", turno.Id);
+
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al reprogramar el turno.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
         }
     }
 }

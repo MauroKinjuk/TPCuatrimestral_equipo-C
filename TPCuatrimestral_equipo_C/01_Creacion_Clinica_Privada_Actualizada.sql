@@ -134,14 +134,23 @@ CREATE TABLE turnos (
 
     CONSTRAINT fk_turnos_estados
         FOREIGN KEY (id_estado_turno)
-        REFERENCES estados_turno (id),
+        REFERENCES estados_turno (id)
 
-    CONSTRAINT uq_turnos_medico_fecha_hora
-        UNIQUE (id_medico, fecha_turno, hora_turno),
-
-    CONSTRAINT uq_turnos_paciente_fecha_hora
-        UNIQUE (id_paciente, fecha_turno, hora_turno)
+    
 );
+GO
+-- Evita turnos duplicados del medico,
+-- ignorando los turnos cancelados.
+CREATE UNIQUE INDEX uq_turnos_medico_fecha_hora
+ON dbo.turnos (id_medico, fecha_turno, hora_turno)
+WHERE id_estado_turno <> 3;
+GO
+
+-- Evita turnos duplicados del paciente,
+-- ignorando los turnos cancelados.
+CREATE UNIQUE INDEX uq_turnos_paciente_fecha_hora
+ON dbo.turnos (id_paciente, fecha_turno, hora_turno)
+WHERE id_estado_turno <> 3;
 GO
 
 
