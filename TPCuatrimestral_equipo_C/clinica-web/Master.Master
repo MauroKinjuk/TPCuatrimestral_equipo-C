@@ -20,21 +20,21 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item dropdown"> 
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
                                 role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">Inicio
                             </a>
 
-                             <%-- Opciones del menú desplegable --%>
+                            <%-- Opciones del menú desplegable --%>
                             <ul class="dropdown-menu">
                                 <li>
-                                     <%-- Acceso a la página principal --%>
+                                    <%-- Acceso a la página principal --%>
                                     <a class="dropdown-item" href="~/Default.aspx" runat="server">Página principal
                                     </a>
                                 </li>
                                 <li id="liIniciarSesion" runat="server">
-                                     <%-- Acceso al formulario de inicio de sesión --%>
+                                    <%-- Acceso al formulario de inicio de sesión --%>
                                     <a class="dropdown-item" href="~/Login.aspx" runat="server">Iniciar sesión
                                     </a>
                                 </li>
@@ -100,8 +100,8 @@
                         <%-- Turnos Medicos --%>
                         <li id="liTurnosMedicos" runat="server" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#"
-                               role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">Turnos Medicos
+                                role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">Turnos Medicos
                             </a>
 
                             <ul class="dropdown-menu">
@@ -115,9 +115,9 @@
                                 </li>
                             </ul>
                         </li>
-                        <%-- ??? --%>
-                        <li class="nav-item">
-                            <a id="linkTurnos" class="nav-link" href="~/FormularioTurnoMedico.aspx" runat="server">Turnos</a>
+                        <%-- Acceso a los turnos del médico --%>
+                        <li id="liMisTurnos" runat="server" class="nav-item" visible="false">
+                            <a id="linkTurnos" class="nav-link" href="~/MisTurnos.aspx" runat="server">Mis turnos</a>
                         </li>
                         <%-- Turnos Trabajo --%>
                         <li id="liTurnosTrabajo" runat="server" class="nav-item dropdown">
@@ -155,9 +155,9 @@
                                 </li>
                             </ul>
                         </li>
-                        
+
                     </ul>
-                    
+
                     <%-- Usuario actual + cerrar sesion --%>
                     <ul class="navbar-nav ms-auto">
                         <li id="liUsuario" runat="server" visible="false" class="nav-item dropdown">
