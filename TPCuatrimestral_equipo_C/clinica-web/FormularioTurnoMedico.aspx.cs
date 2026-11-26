@@ -310,7 +310,7 @@ namespace clinica_web
 
                 turno.Fecha = fecha;
                 turno.Hora = hora;
-                turno.Observaciones = txtObservaciones.Text;
+                turno.Observaciones = txtObservaciones.Text.Trim();
 
                 TurnoMedicoNegocio negocio = new TurnoMedicoNegocio();
 
@@ -369,6 +369,15 @@ namespace clinica_web
             if (ViewState["HoraSeleccionada"] == null)
             {
                 errores.Add("Debe seleccionar un horario.");
+            }
+
+            if (string.IsNullOrWhiteSpace(txtObservaciones.Text))
+            {
+                errores.Add("Debe cargar el motivo del turno en observaciones.");
+            }
+            else if (txtObservaciones.Text.Trim().Length > 255)
+            {
+                errores.Add("Las observaciones no pueden superar los 255 caracteres.");
             }
 
             if (!string.IsNullOrWhiteSpace(ddlPaciente.SelectedValue) &&

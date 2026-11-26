@@ -199,13 +199,16 @@ namespace negocio
 
             try
             {
+                datos.IniciarTransaccion();
+
                 datos.SetearConsulta(
                     @"INSERT INTO turnos
                     (id_paciente, id_especialidad, id_medico, id_estado_turno,
                      fecha_turno, hora_turno, observaciones)
                     VALUES
                     (@idPaciente, @idEspecialidad, @idMedico, @idEstado,
-                     @fecha, @hora, @observaciones)");
+                     @fecha, @hora, @observaciones);
+                    SELECT CAST(SCOPE_IDENTITY() AS INT);");
 
                 datos.SetearParametro("@idPaciente", turno.Paciente.Id);
                 datos.SetearParametro("@idEspecialidad", turno.Especialidad.Id);
@@ -213,12 +216,23 @@ namespace negocio
                 datos.SetearParametro("@idEstado", turno.Estado.Id);
                 datos.SetearParametro("@fecha", turno.Fecha.Date);
                 datos.SetearParametro("@hora", turno.Hora);
-                datos.SetearParametro("@observaciones", (object)turno.Observaciones ?? DBNull.Value);
+                datos.SetearParametro("@observaciones", turno.Observaciones.Trim());
+
+                turno.Id = (int)datos.EjecutarScalar();
+
+                datos.SetearConsulta(
+                    @"INSERT INTO consultas (id_turno, motivo)
+                    VALUES (@idTurno, @motivo)");
+
+                datos.SetearParametro("@idTurno", turno.Id);
+                datos.SetearParametro("@motivo", turno.Observaciones.Trim());
 
                 datos.EjecutarAccion();
+                datos.ConfirmarTransaccion();
             }
             catch (Exception ex)
             {
+                datos.RevertirTransaccion();
                 throw new Exception("Error al agregar el turno.", ex);
             }
             finally
@@ -428,6 +442,8 @@ namespace negocio
 
             try
             {
+                datos.IniciarTransaccion();
+
                 // Reprograma un turno vigente, verificando que el nuevo
                 // horario sea futuro y no esté ocupado por otro turno.
                 datos.SetearConsulta(
@@ -461,14 +477,29 @@ namespace negocio
 
                 datos.SetearParametro("@fecha", turno.Fecha.Date);
                 datos.SetearParametro("@hora", turno.Hora);
-                datos.SetearParametro("@observaciones",
-                    (object)turno.Observaciones ?? DBNull.Value);
+                datos.SetearParametro("@observaciones", turno.Observaciones.Trim());
                 datos.SetearParametro("@idTurno", turno.Id);
 
                 datos.EjecutarAccion();
+
+                datos.SetearConsulta(
+                    @"IF EXISTS (SELECT 1 FROM consultas WHERE id_turno = @idTurno)
+                        UPDATE consultas
+                        SET motivo = @motivo
+                        WHERE id_turno = @idTurno;
+                    ELSE
+                        INSERT INTO consultas (id_turno, motivo)
+                        VALUES (@idTurno, @motivo);");
+
+                datos.SetearParametro("@idTurno", turno.Id);
+                datos.SetearParametro("@motivo", turno.Observaciones.Trim());
+
+                datos.EjecutarAccion();
+                datos.ConfirmarTransaccion();
             }
             catch (Exception ex)
             {
+                datos.RevertirTransaccion();
                 throw new Exception("Error al reprogramar el turno.", ex);
             }
             finally

@@ -102,7 +102,7 @@
                     CssClass="form-control"
                     TextMode="MultiLine"
                     Rows="3"
-                    MaxLength="500">
+                    MaxLength="255">
                 </asp:TextBox>
             </div>
             <div class="text-end mt-2">
