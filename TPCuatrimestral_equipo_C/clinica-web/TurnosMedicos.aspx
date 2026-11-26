@@ -26,6 +26,9 @@
                     EmptyDataText="No hay turnos registrados para la fecha seleccionada.">
                     <HeaderStyle CssClass="table-dark" />
                     <Columns>
+                        <asp:BoundField DataField="Id" HeaderText="N°"
+                            HeaderStyle-CssClass="ps-3"
+                            ItemStyle-CssClass="ps-3" />
                         <asp:BoundField DataField="Fecha" HeaderText="Fecha"
                             DataFormatString="{0:dd/MM/yyyy}"
                             HeaderStyle-CssClass="ps-3"

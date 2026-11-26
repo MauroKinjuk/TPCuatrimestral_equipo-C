@@ -72,7 +72,13 @@ namespace clinica_web
         private void cargarDvg()
         {
             TurnoMedicoNegocio negocio = new TurnoMedicoNegocio();
-            DateTime fecha = DateTime.Parse(txtFecha.Text);
+            DateTime fecha;
+
+            if (!DateTime.TryParse(txtFecha.Text, out fecha))
+            {
+                fecha = DateTime.Today;
+                txtFecha.Text = fecha.ToString("yyyy-MM-dd");
+            }
 
             List<TurnoMedico> turnos = negocio.ListarPorFecha(fecha.Date);
 
