@@ -507,8 +507,14 @@ namespace clinica_web
                 TimeSpan hora = TimeSpan.Parse(ViewState["HoraSeleccionada"].ToString());
 
                 TurnoMedicoNegocio negocio = new TurnoMedicoNegocio();
+                int idTurno = 0;
 
-                if (negocio.ExisteTurnoPaciente(idPaciente, fecha, hora))
+                if (ViewState["IdTurnoReprogramar"] != null)
+                {
+                    idTurno = (int)ViewState["IdTurnoReprogramar"];
+                }
+
+                if (negocio.ExisteTurnoPaciente(idPaciente, fecha, hora, idTurno))
                 {
                     errores.Add("El paciente ya tiene un turno asignado en esa fecha y horario.");
                 }

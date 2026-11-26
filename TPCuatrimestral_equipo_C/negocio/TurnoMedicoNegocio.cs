@@ -162,22 +162,39 @@ namespace negocio
 
             foreach (TurnoTrabajo horario in horariosDelDia)
             {
-                // Recorre los horarios del medico, empezando por el inicial y agregando 1h por loop.
+                // Si el horario termina a medianoche o al día siguiente,
+                // se suma un día para poder comparar correctamente.
+                TimeSpan horaFin = horario.HoraFin;
+
+                if (horaFin <= horario.HoraInicio)
+                {
+                    horaFin = horaFin.Add(TimeSpan.FromDays(1));
+                }
+
+                // Recorre los horarios del médico, agregando una hora por iteración.
                 for (TimeSpan hora = horario.HoraInicio;
-                     hora.Add(TimeSpan.FromHours(1)) <= horario.HoraFin;
+                     hora.Add(TimeSpan.FromHours(1)) <= horaFin;
                      hora = hora.Add(TimeSpan.FromHours(1)))
                 {
+                    // Convierte la hora a un formato válido del día (00:00 a 23:59).
+                    TimeSpan horaDisponible = hora;
+
+                    if (horaDisponible >= TimeSpan.FromDays(1))
+                    {
+                        horaDisponible = horaDisponible.Subtract(TimeSpan.FromDays(1));
+                    }
+
                     // Si la fecha es hoy, descarta los horarios que ya pasaron.
-                    if (fecha.Date == DateTime.Today && hora <= DateTime.Now.TimeOfDay)
+                    if (fecha.Date == DateTime.Today && horaDisponible <= DateTime.Now.TimeOfDay)
                         continue;
 
-                    // Valida si el turno con la fecha y hora del loop esta ocupado.
+                    // Valida si el turno con la fecha y hora del loop está ocupado.
                     bool ocupado = false;
+
                     foreach (TurnoMedico turno in turnosMedico)
                     {
                         if (turno.Fecha.Date == fecha.Date &&
-                            turno.Hora == hora &&
-                            // Los turnos cancelados (id 3) siguen estando disponibles.
+                            turno.Hora == horaDisponible &&
                             turno.Estado.Id != 3)
                         {
                             ocupado = true;
@@ -186,7 +203,7 @@ namespace negocio
                     }
 
                     if (!ocupado)
-                        horariosDisponibles.Add(hora);
+                        horariosDisponibles.Add(horaDisponible);
                 }
             }
 
@@ -313,6 +330,43 @@ namespace negocio
                 datos.SetearParametro("@idPaciente", idPaciente);
                 datos.SetearParametro("@fecha", fecha.Date);
                 datos.SetearParametro("@hora", hora);
+
+                existe = datos.EjecutarScalar() != null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al consultar turnos del paciente.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return existe;
+        }
+
+        // Sobrecarga
+        public bool ExisteTurnoPaciente(int idPaciente, DateTime fecha, TimeSpan hora, int idTurno)
+
+        // Evita que un paciente tenga dos turnos simultáneos (sin contar el actual para reprogramar).
+
+        {
+            AccesoDatos datos = new AccesoDatos();
+            bool existe = false;
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT 1 FROM turnos
+                    WHERE id_paciente = @idPaciente
+                    AND id_estado_turno <> 3
+                    AND fecha_turno = @fecha
+                    AND hora_turno = @hora
+                    AND id <> @idTurno");
+                datos.SetearParametro("@idPaciente", idPaciente);
+                datos.SetearParametro("@fecha", fecha.Date);
+                datos.SetearParametro("@hora", hora);
+                datos.SetearParametro("@idTurno", idTurno);
 
                 existe = datos.EjecutarScalar() != null;
             }

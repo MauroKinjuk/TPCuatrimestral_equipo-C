@@ -106,11 +106,11 @@
 
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" href="~/TurnosMedicos.aspx" runat="server">Turnos Medicos
+                                    <a class="dropdown-item" href="~/TurnosMedicos.aspx" runat="server">Listado de turnos medicos
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="~/FormularioTurnoMedico.aspx" runat="server">Nueva Turno Medico
+                                    <a class="dropdown-item" href="~/FormularioTurnoMedico.aspx" runat="server">Nuevo turno medico
                                     </a>
                                 </li>
                             </ul>
@@ -132,7 +132,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="~/FormularioTurnoTrabajo.aspx" runat="server">Agregar turno de trabajo
+                                    <a class="dropdown-item" href="~/FormularioTurnoTrabajo.aspx" runat="server">Nuevo turno de trabajo
                                     </a>
                                 </li>
                             </ul>
