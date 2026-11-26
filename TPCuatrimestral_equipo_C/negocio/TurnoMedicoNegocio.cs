@@ -193,6 +193,59 @@ namespace negocio
             return horariosDisponibles;
         }
 
+
+        // Busca los tres turnos disponibles más próximos
+        // según la especialidad y el paciente seleccionado.
+        public List<TurnoMedico> ListarTurnosSugeridos(int idEspecialidad, int idPaciente)
+        {
+            List<TurnoMedico> sugerencias = new List<TurnoMedico>();
+
+            MedicoNegocio negocioMedicos = new MedicoNegocio();
+            TurnoTrabajoNegocio negocioTrabajo = new TurnoTrabajoNegocio();
+
+            // Obtiene los médicos asociados a la especialidad.
+            List<Medico> medicos = negocioMedicos.ListarPorEspecialidad(idEspecialidad);
+
+            foreach (Medico medico in medicos)
+            {
+                // Obtiene los horarios de trabajo y los turnos del médico.
+                List<TurnoTrabajo> horariosTrabajo = negocioTrabajo.ListarPorMedico(medico.Id);
+
+                List<TurnoMedico> turnosMedico = ListarPorMedico(medico.Id);
+
+                // Recorre los próximos 30 días, incluyendo hoy.
+                for (int i = 0; i < 30; i++)
+                {
+                    DateTime fecha = DateTime.Today.AddDays(i);
+
+                    List<TimeSpan> horarios = ListarHorariosDisponibles(fecha, horariosTrabajo, turnosMedico);
+
+                    foreach (TimeSpan hora in horarios.Distinct())
+                    {
+                        // Verifica que el paciente no tenga otro turno
+                        // en la misma fecha y horario.
+                        if (!ExisteTurnoPaciente(idPaciente, fecha, hora))
+                        {
+                            TurnoMedico turno = new TurnoMedico();
+
+                            turno.Medico = medico;
+                            turno.Fecha = fecha;
+                            turno.Hora = hora;
+
+                            sugerencias.Add(turno);
+                        }
+                    }
+                }
+            }
+
+            // Ordena los turnos por fecha y hora
+            // y devuelve solamente los primeros tres.
+            return sugerencias
+                .OrderBy(t => t.Fecha)
+                .ThenBy(t => t.Hora)
+                .Take(3)
+                .ToList();
+        }
         public void Agregar(TurnoMedico turno)
         {
             AccesoDatos datos = new AccesoDatos();

@@ -21,7 +21,9 @@
                     <asp:DropDownList
                         ID="ddlPaciente"
                         runat="server"
-                        CssClass="form-select">
+                        CssClass="form-select"
+                        AutoPostBack="true"
+                        OnSelectedIndexChanged="ddlPaciente_SelectedIndexChanged">
                     </asp:DropDownList>
                 </div>
                 <!-- Especialidad -->
@@ -35,6 +37,54 @@
                         OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged">
                     </asp:DropDownList>
                 </div>
+
+                <!-- Turnos sugeridos automáticamente -->
+                <asp:Panel ID="pnlTurnosSugeridos" runat="server" Visible="false" CssClass="col-12 mb-3">
+
+                    <h6>Turnos sugeridos</h6>
+
+                    <p class="text-muted">
+                        Seleccione uno de los turnos sugeridos o continúe con la selección manual.
+                    </p>
+
+                    <div class="row g-2">
+                        <asp:Repeater
+                            ID="rptTurnosSugeridos"
+                            runat="server"
+                            OnItemCommand="rptTurnosSugeridos_ItemCommand">
+
+                            <ItemTemplate>
+                                <div class="col-md-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+
+                                            <h6><%# Eval("Medico") %></h6>
+
+                                            <p class="mb-1">
+                                                Fecha: <%# Eval("Fecha") %>
+                                            </p>
+
+                                            <p class="mb-2">
+                                                Hora: <%# Eval("Hora") %>
+                                            </p>
+
+                                            <asp:Button
+                                                ID="btnElegirTurno"
+                                                runat="server"
+                                                Text="Elegir turno"
+                                                CommandName="SeleccionarTurno"
+                                                CommandArgument='<%# Eval("DatosTurno") %>'
+                                                CssClass="btn btn-outline-primary w-100" />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </ItemTemplate>
+
+                        </asp:Repeater>
+                    </div>
+
+                </asp:Panel>
                 <!-- Médico -->
                 <div class="col-md-6 mb-3">
                     <label for="ddlMedico" class="form-label">Médico</label>
