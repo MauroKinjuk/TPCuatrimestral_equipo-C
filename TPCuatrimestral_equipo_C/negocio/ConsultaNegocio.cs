@@ -50,32 +50,76 @@ namespace negocio
             return consulta;
         }
 
-        public void ModificarDiagnostico(int idTurno, string diagnostico)
+        public void ModificarDiagnostico(int idTurno, int idMedico, string diagnostico)
         {
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                datos.SetearConsulta(
-                    @"IF EXISTS (SELECT 1 FROM consultas WHERE id_turno = @idTurno)
-                        UPDATE consultas
-                        SET diagnostico = @diagnostico
-                        WHERE id_turno = @idTurno;
-                    ELSE
-                        INSERT INTO consultas (id_turno, motivo, diagnostico)
-                        SELECT @idTurno,
-                            LEFT(COALESCE(NULLIF(T.observaciones, ''), 'Sin motivo registrado'), 255),
-                            @diagnostico
-                        FROM turnos T
-                        WHERE T.id = @idTurno;");
+                TurnoNegocio turnoNegocio = new TurnoNegocio();
+                TurnoMedico turno = turnoNegocio.BuscarPorId(idTurno);
 
-                datos.SetearParametro("@diagnostico", diagnostico);
-                datos.SetearParametro("@idTurno", idTurno);
+                if (turno == null || turno.Medico.Id != idMedico ||
+                    (turno.Estado.Id != 1 && turno.Estado.Id != 2))
+                {
+                    throw new Exception("No se puede cerrar el turno.");
+                }
+
+                Consulta consulta = BuscarPorTurno(idTurno);
+
+                datos.IniciarTransaccion();
+
+                if (consulta == null)
+                {
+                    string motivo = turno.Observaciones;
+
+                    if (string.IsNullOrWhiteSpace(motivo))
+                    {
+                        motivo = "Sin motivo registrado";
+                    }
+
+                    if (motivo.Length > 255)
+                    {
+                        motivo = motivo.Substring(0, 255);
+                    }
+
+                    datos.SetearConsulta(
+                        @"INSERT INTO consultas (id_turno, motivo, diagnostico)
+                        VALUES (@idTurno, @motivo, @diagnostico)");
+
+                    datos.SetearParametro("@idTurno", idTurno);
+                    datos.SetearParametro("@motivo", motivo);
+                    datos.SetearParametro("@diagnostico", diagnostico);
+                }
+                else
+                {
+                    datos.SetearConsulta(
+                        @"UPDATE consultas
+                        SET diagnostico = @diagnostico
+                        WHERE id_turno = @idTurno");
+
+                    datos.SetearParametro("@diagnostico", diagnostico);
+                    datos.SetearParametro("@idTurno", idTurno);
+                }
 
                 datos.EjecutarAccion();
+
+                datos.SetearConsulta(
+                    @"UPDATE turnos
+                    SET id_estado_turno = 5
+                    WHERE id = @idTurno
+                    AND id_medico = @idMedico
+                    AND id_estado_turno IN (1, 2)");
+
+                datos.SetearParametro("@idTurno", idTurno);
+                datos.SetearParametro("@idMedico", idMedico);
+
+                datos.EjecutarAccion();
+                datos.ConfirmarTransaccion();
             }
             catch (Exception ex)
             {
+                datos.RevertirTransaccion();
                 throw new Exception("Error al guardar el diagnóstico.", ex);
             }
             finally

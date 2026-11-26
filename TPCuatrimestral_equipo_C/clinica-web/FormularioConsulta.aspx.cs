@@ -31,8 +31,19 @@ namespace clinica_web
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(txtDiagnostico.Text))
+                {
+                    pnlMensaje.Visible = true;
+                    lblMensaje.Text = "Debe cargar un diagnóstico.";
+                    return;
+                }
+
+                Usuario usuario = (Usuario)Session["usuario"];
                 ConsultaNegocio negocio = new ConsultaNegocio();
-                negocio.ModificarDiagnostico(int.Parse(hfIdTurno.Value), txtDiagnostico.Text.Trim());
+                negocio.ModificarDiagnostico(
+                    int.Parse(hfIdTurno.Value),
+                    usuario.Medico.Id,
+                    txtDiagnostico.Text.Trim());
                 Response.Redirect("~/MisTurnos.aspx", false);
             }
             catch (Exception ex)
@@ -48,8 +59,9 @@ namespace clinica_web
             TurnoNegocio negocio = new TurnoNegocio();
             TurnoMedico turno = negocio.BuscarPorId(idTurno);
 
-            // El medico solo puede ver sus propios turnos
-            if (turno == null || usuario.Medico == null || turno.Medico.Id != usuario.Medico.Id)
+            // El medico solo puede cargar diagnóstico en sus turnos vigentes
+            if (turno == null || usuario.Medico == null || turno.Medico.Id != usuario.Medico.Id ||
+                (turno.Estado.Id != 1 && turno.Estado.Id != 2))
             {
                 Response.Redirect("~/MisTurnos.aspx", false);
                 return;

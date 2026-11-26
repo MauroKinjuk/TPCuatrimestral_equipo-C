@@ -50,7 +50,8 @@
                         <asp:TemplateField HeaderText="Acciones" HeaderStyle-CssClass="text-end pe-4" ItemStyle-CssClass="text-end pe-4">
                             <ItemTemplate>
                                 <asp:Button ID="btnDiagnostico" runat="server" Text="Cargar diagnóstico" CssClass="btn btn-sm btn-outline-secondary"
-                                    CommandName="Diagnostico" CommandArgument='<%# Eval("Id") %>' />
+                                    CommandName="Diagnostico" CommandArgument='<%# Eval("Id") %>'
+                                    Visible='<%# (int)Eval("Estado.Id") == 1 || (int)Eval("Estado.Id") == 2 %>' />
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>

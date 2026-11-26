@@ -495,6 +495,9 @@ namespace negocio
 
             try
             {
+                ConsultaNegocio consultaNegocio = new ConsultaNegocio();
+                Consulta consulta = consultaNegocio.BuscarPorTurno(turno.Id);
+
                 datos.IniciarTransaccion();
 
                 // Reprograma un turno vigente, verificando que el nuevo
@@ -535,14 +538,19 @@ namespace negocio
 
                 datos.EjecutarAccion();
 
-                datos.SetearConsulta(
-                    @"IF EXISTS (SELECT 1 FROM consultas WHERE id_turno = @idTurno)
-                        UPDATE consultas
+                if (consulta == null)
+                {
+                    datos.SetearConsulta(
+                        @"INSERT INTO consultas (id_turno, motivo)
+                        VALUES (@idTurno, @motivo)");
+                }
+                else
+                {
+                    datos.SetearConsulta(
+                        @"UPDATE consultas
                         SET motivo = @motivo
-                        WHERE id_turno = @idTurno;
-                    ELSE
-                        INSERT INTO consultas (id_turno, motivo)
-                        VALUES (@idTurno, @motivo);");
+                        WHERE id_turno = @idTurno");
+                }
 
                 datos.SetearParametro("@idTurno", turno.Id);
                 datos.SetearParametro("@motivo", turno.Observaciones.Trim());
