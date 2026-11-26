@@ -8,6 +8,18 @@
         <asp:Label ID="lblMensaje" runat="server"></asp:Label>
     </asp:Panel>
 
+    <asp:Panel ID="pnlDescripcion" runat="server" Visible="false" CssClass="card shadow-sm mb-3">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 pt-1">
+                <asp:Label ID="lblNombreDescripcion" runat="server"></asp:Label>
+            </h5>
+            <asp:Button ID="btnCerrarDescripcion" runat="server" Text="Cerrar" CssClass="btn btn-sm btn-outline-secondary" OnClick="btnCerrarDescripcion_Click" />
+        </div>
+        <div class="card-body">
+            <asp:Label ID="lblDescripcion" runat="server"></asp:Label>
+        </div>
+    </asp:Panel>
+
     <!-- Buscador y alta -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex gap-2">

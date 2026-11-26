@@ -40,7 +40,19 @@ namespace clinica_web
 
             if (e.CommandName == "Descripcion")
             {
-                // TODO = Añadir vista descripcion
+                EspecialidadNegocio negocio = new EspecialidadNegocio();
+                Especialidad especialidad = negocio.BuscarPorId(id);
+
+                if (especialidad != null)
+                {
+                    lblNombreDescripcion.Text = especialidad.Nombre;
+                    lblDescripcion.Text = string.IsNullOrWhiteSpace(especialidad.Descripcion)
+                        ? "Sin descripción cargada."
+                        : especialidad.Descripcion;
+                    pnlDescripcion.Visible = true;
+                }
+
+                cargarDgv();
             }
             else if (e.CommandName == "Editar")
             {
@@ -60,6 +72,11 @@ namespace clinica_web
                     lblMensaje.Text = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 }
             }
+        }
+
+        protected void btnCerrarDescripcion_Click(object sender, EventArgs e)
+        {
+            pnlDescripcion.Visible = false;
         }
 
         private void cargarDgv()
