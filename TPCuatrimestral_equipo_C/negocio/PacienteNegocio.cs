@@ -282,5 +282,31 @@ namespace negocio
             datos.SetearParametro("@direccion", string.IsNullOrEmpty(paciente.Direccion) ? (object)DBNull.Value : paciente.Direccion);
             datos.SetearParametro("@nroAfiliado", string.IsNullOrEmpty(paciente.NroAfiliado) ? (object)DBNull.Value : paciente.NroAfiliado);
         }
+
+        public int Contar()
+        {
+            int cantidad = 0;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT COUNT(*) 
+                    FROM pacientes
+                    WHERE activo = 1");
+
+                cantidad = Convert.ToInt32(datos.EjecutarScalar());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al contar los pacientes.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return cantidad;
+        }
     }
 }

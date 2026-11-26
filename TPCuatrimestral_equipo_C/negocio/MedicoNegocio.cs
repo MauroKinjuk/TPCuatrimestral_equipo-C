@@ -374,5 +374,30 @@ namespace negocio
 
             return especialidad;
         }
+
+        public int Contar()
+        {
+            int cantidad = 0;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT COUNT(*) 
+                    FROM medicos 
+                    WHERE activo = 1");
+                cantidad = Convert.ToInt32(datos.EjecutarScalar());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al contar los médicos.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return cantidad;
+        }
     }
 }

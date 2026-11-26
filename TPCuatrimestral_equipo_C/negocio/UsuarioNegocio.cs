@@ -341,5 +341,34 @@ namespace negocio
                 datos.CerrarConexion();
             }
         }
+
+        public int ContarPorTipo(TipoUsuario tipo)
+        {
+            int cantidad = 0;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT COUNT(*)
+              FROM usuarios
+              WHERE activo = 1
+              AND tipo = @tipo");
+
+                datos.SetearParametro("@tipo", tipo.ToString());
+
+                cantidad = Convert.ToInt32(datos.EjecutarScalar());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al contar los usuarios por tipo.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return cantidad;
+        }
     }
 }

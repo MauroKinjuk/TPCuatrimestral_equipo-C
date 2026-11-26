@@ -232,5 +232,31 @@ namespace negocio
                 string.IsNullOrEmpty(especialidad.Descripcion) ? (Object)DBNull.Value : especialidad.Descripcion
                 );
         }
+
+        public int Contar()
+        {
+            int cantidad = 0;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT COUNT(*)
+                    FROM especialidades
+                    WHERE activo = 1");
+
+                cantidad = Convert.ToInt32(datos.EjecutarScalar());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al contar las especialidades.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return cantidad;
+        }
     }
 }

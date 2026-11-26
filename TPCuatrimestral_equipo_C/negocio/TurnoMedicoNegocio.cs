@@ -476,5 +476,188 @@ namespace negocio
                 datos.CerrarConexion();
             }
         }
+
+        // Sobrecarga: Cuenta todos los turnos históricos con el estado especifico.
+        public int ContarPorEstado(int idEstado)
+        {
+            int cantidad = 0;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT COUNT(*)
+                    FROM turnos
+                    WHERE id_estado_turno = @idEstado");
+
+                datos.SetearParametro("@idEstado", idEstado);
+
+                cantidad = Convert.ToInt32(datos.EjecutarScalar());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al contar los turnos por estado.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return cantidad;
+        }
+
+        // Sobrecarga: Cuenta todos los turnos de una fecha determinada con el estado especifico.
+        public int ContarPorEstado(DateTime fecha, int idEstado)
+        {
+            int cantidad = 0;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT COUNT(*)
+                    FROM turnos
+                    WHERE fecha_turno = @fecha
+                    AND id_estado_turno = @idEstado");
+
+                datos.SetearParametro("@fecha", fecha.Date);
+                datos.SetearParametro("@idEstado", idEstado);
+
+                cantidad = Convert.ToInt32(datos.EjecutarScalar());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al contar los turnos por estado.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return cantidad;
+        }
+
+        // Sobrecarga: Cuenta todos los turnos de una fecha determinada con el estado y medico especifico.
+        public int ContarPorEstado(DateTime fecha, int idEstado, int idMedico)
+        {
+            int cantidad = 0;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT COUNT(*)
+                    FROM turnos
+                    WHERE fecha_turno = @fecha
+                    AND id_estado_turno = @idEstado
+                    AND id_medico = @idMedico");
+
+                datos.SetearParametro("@fecha", fecha.Date);
+                datos.SetearParametro("@idEstado", idEstado);
+                datos.SetearParametro("@idMedico", idMedico);
+
+                cantidad = Convert.ToInt32(datos.EjecutarScalar());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al contar los turnos del médico por estado.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return cantidad;
+        }
+
+        // Sobrecarga: Cuenta todos los turnos pendientes históricos.
+        public int ContarPendientes()
+        {
+            int cantidad = 0;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT COUNT(*)
+                    FROM turnos
+                    WHERE id_estado_turno IN (1, 2)");
+
+                cantidad = Convert.ToInt32(datos.EjecutarScalar());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al contar los turnos pendientes.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return cantidad;
+        }
+
+        // Sobrecarga: Cuenta los turnos pendientes de una fecha determinada.
+        public int ContarPendientes(DateTime fecha)
+        {
+            int cantidad = 0;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT COUNT(*)
+                    FROM turnos
+                    WHERE fecha_turno = @fecha
+                    AND id_estado_turno IN (1, 2)");
+
+                datos.SetearParametro("@fecha", fecha.Date);
+
+                cantidad = Convert.ToInt32(datos.EjecutarScalar());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al contar los turnos pendientes.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return cantidad;
+        }
+
+        // Sobrecarga: Cuenta los turnos pendientes de una fecha y medico determinado.
+        public int ContarPendientes(DateTime fecha, int idMedico)
+        {
+            int cantidad = 0;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT COUNT(*)
+                    FROM turnos
+                    WHERE fecha_turno = @fecha
+                    AND id_medico = @idMedico
+                    AND id_estado_turno IN (1, 2)");
+
+                datos.SetearParametro("@fecha", fecha.Date);
+                datos.SetearParametro("@idMedico", idMedico);
+
+                cantidad = Convert.ToInt32(datos.EjecutarScalar());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al contar los turnos pendientes del médico.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return cantidad;
+        }
+
     }
 }

@@ -166,5 +166,31 @@ namespace negocio
                 datos.CerrarConexion();
             }
         }
+
+        public int Contar()
+        {
+            int cantidad = 0;
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    @"SELECT COUNT(*)
+                    FROM obras_sociales
+                    WHERE activo = 1");
+
+                cantidad = Convert.ToInt32(datos.EjecutarScalar());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al contar las obras sociales.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return cantidad;
+        }
     }
 }
