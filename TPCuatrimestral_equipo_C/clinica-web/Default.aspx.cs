@@ -43,6 +43,7 @@ namespace clinica_web
             else if (Seguridad.EsMedico(usuario))
             {
                 pnlMedico.Visible = true;
+                CargarMedico();
             }
         }
 
