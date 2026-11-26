@@ -193,19 +193,75 @@ namespace negocio
             return horariosDisponibles;
         }
 
+
+        // Busca los tres turnos disponibles más próximos
+        // según la especialidad y el paciente seleccionado.
+        public List<TurnoMedico> ListarTurnosSugeridos(int idEspecialidad, int idPaciente)
+        {
+            List<TurnoMedico> sugerencias = new List<TurnoMedico>();
+
+            MedicoNegocio negocioMedicos = new MedicoNegocio();
+            TurnoTrabajoNegocio negocioTrabajo = new TurnoTrabajoNegocio();
+
+            // Obtiene los médicos asociados a la especialidad.
+            List<Medico> medicos = negocioMedicos.ListarPorEspecialidad(idEspecialidad);
+
+            foreach (Medico medico in medicos)
+            {
+                // Obtiene los horarios de trabajo y los turnos del médico.
+                List<TurnoTrabajo> horariosTrabajo = negocioTrabajo.ListarPorMedico(medico.Id);
+
+                List<TurnoMedico> turnosMedico = ListarPorMedico(medico.Id);
+
+                // Recorre los próximos 30 días, incluyendo hoy.
+                for (int i = 0; i < 30; i++)
+                {
+                    DateTime fecha = DateTime.Today.AddDays(i);
+
+                    List<TimeSpan> horarios = ListarHorariosDisponibles(fecha, horariosTrabajo, turnosMedico);
+
+                    foreach (TimeSpan hora in horarios.Distinct())
+                    {
+                        // Verifica que el paciente no tenga otro turno
+                        // en la misma fecha y horario.
+                        if (!ExisteTurnoPaciente(idPaciente, fecha, hora))
+                        {
+                            TurnoMedico turno = new TurnoMedico();
+
+                            turno.Medico = medico;
+                            turno.Fecha = fecha;
+                            turno.Hora = hora;
+
+                            sugerencias.Add(turno);
+                        }
+                    }
+                }
+            }
+
+            // Ordena los turnos por fecha y hora
+            // y devuelve solamente los primeros tres.
+            return sugerencias
+                .OrderBy(t => t.Fecha)
+                .ThenBy(t => t.Hora)
+                .Take(3)
+                .ToList();
+        }
         public void Agregar(TurnoMedico turno)
         {
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
+                datos.IniciarTransaccion();
+
                 datos.SetearConsulta(
                     @"INSERT INTO turnos
                     (id_paciente, id_especialidad, id_medico, id_estado_turno,
                      fecha_turno, hora_turno, observaciones)
                     VALUES
                     (@idPaciente, @idEspecialidad, @idMedico, @idEstado,
-                     @fecha, @hora, @observaciones)");
+                     @fecha, @hora, @observaciones);
+                    SELECT CAST(SCOPE_IDENTITY() AS INT);");
 
                 datos.SetearParametro("@idPaciente", turno.Paciente.Id);
                 datos.SetearParametro("@idEspecialidad", turno.Especialidad.Id);
@@ -213,12 +269,23 @@ namespace negocio
                 datos.SetearParametro("@idEstado", turno.Estado.Id);
                 datos.SetearParametro("@fecha", turno.Fecha.Date);
                 datos.SetearParametro("@hora", turno.Hora);
-                datos.SetearParametro("@observaciones", (object)turno.Observaciones ?? DBNull.Value);
+                datos.SetearParametro("@observaciones", turno.Observaciones.Trim());
+
+                turno.Id = (int)datos.EjecutarScalar();
+
+                datos.SetearConsulta(
+                    @"INSERT INTO consultas (id_turno, motivo)
+                    VALUES (@idTurno, @motivo)");
+
+                datos.SetearParametro("@idTurno", turno.Id);
+                datos.SetearParametro("@motivo", turno.Observaciones.Trim());
 
                 datos.EjecutarAccion();
+                datos.ConfirmarTransaccion();
             }
             catch (Exception ex)
             {
+                datos.RevertirTransaccion();
                 throw new Exception("Error al agregar el turno.", ex);
             }
             finally
@@ -428,6 +495,8 @@ namespace negocio
 
             try
             {
+                datos.IniciarTransaccion();
+
                 // Reprograma un turno vigente, verificando que el nuevo
                 // horario sea futuro y no esté ocupado por otro turno.
                 datos.SetearConsulta(
@@ -461,14 +530,29 @@ namespace negocio
 
                 datos.SetearParametro("@fecha", turno.Fecha.Date);
                 datos.SetearParametro("@hora", turno.Hora);
-                datos.SetearParametro("@observaciones",
-                    (object)turno.Observaciones ?? DBNull.Value);
+                datos.SetearParametro("@observaciones", turno.Observaciones.Trim());
                 datos.SetearParametro("@idTurno", turno.Id);
 
                 datos.EjecutarAccion();
+
+                datos.SetearConsulta(
+                    @"IF EXISTS (SELECT 1 FROM consultas WHERE id_turno = @idTurno)
+                        UPDATE consultas
+                        SET motivo = @motivo
+                        WHERE id_turno = @idTurno;
+                    ELSE
+                        INSERT INTO consultas (id_turno, motivo)
+                        VALUES (@idTurno, @motivo);");
+
+                datos.SetearParametro("@idTurno", turno.Id);
+                datos.SetearParametro("@motivo", turno.Observaciones.Trim());
+
+                datos.EjecutarAccion();
+                datos.ConfirmarTransaccion();
             }
             catch (Exception ex)
             {
+                datos.RevertirTransaccion();
                 throw new Exception("Error al reprogramar el turno.", ex);
             }
             finally

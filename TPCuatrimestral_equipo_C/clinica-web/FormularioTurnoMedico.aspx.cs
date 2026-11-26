@@ -134,6 +134,86 @@ namespace clinica_web
                     "Seleccione un Medico...", ""));
         }
 
+
+
+
+
+        // Carga los tres turnos sugeridos según el paciente
+        // y la especialidad seleccionada.
+        private void CargarTurnosSugeridos()
+        {
+            // Oculta el panel inicialmente.
+            pnlTurnosSugeridos.Visible = false;
+
+            // Verifica que se haya seleccionado un paciente
+            // y una especialidad.
+            if (string.IsNullOrEmpty(ddlPaciente.SelectedValue) ||
+                string.IsNullOrEmpty(ddlEspecialidad.SelectedValue))
+            {
+                return;
+            }
+
+            // Obtiene los ID seleccionados.
+            int idPaciente = int.Parse(ddlPaciente.SelectedValue);
+            int idEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
+
+            TurnoMedicoNegocio negocio = new TurnoMedicoNegocio();
+
+            // Obtiene los tres turnos disponibles más próximos.
+            List<TurnoMedico> sugerencias = negocio.ListarTurnosSugeridos(idEspecialidad, idPaciente);
+
+            // Prepara los datos que se mostrarán en las tarjetas.
+            rptTurnosSugeridos.DataSource = sugerencias.Select(t => new
+            {
+                Medico = t.Medico.NombreCompleto,
+                Fecha = t.Fecha.ToString("dd/MM/yyyy"),
+                Hora = t.Hora.ToString(@"hh\:mm"),
+
+                DatosTurno = t.Medico.Id + "|" +
+                             t.Fecha.ToString("dd-MM-yyyy") + "|" +
+                             t.Hora.ToString(@"hh\:mm")
+            }).ToList();
+
+            // Carga los datos en el Repeater.
+            rptTurnosSugeridos.DataBind();
+
+            // Muestra el panel si existen turnos sugeridos.
+            pnlTurnosSugeridos.Visible = sugerencias.Count > 0;
+        }
+
+
+
+        // Permite seleccionar uno de los turnos sugeridos.
+        protected void rptTurnosSugeridos_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "SeleccionarTurno")
+            {
+                // Separa los datos del turno seleccionado.
+                string[] datos = e.CommandArgument.ToString().Split('|');
+                // Split() divide esa cadena y guarda cada dato en una posición diferente del vector.
+
+
+                int idMedico = int.Parse(datos[0]);
+
+                DateTime fecha = DateTime.ParseExact(datos[1], "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+                TimeSpan hora = TimeSpan.Parse(datos[2]);
+
+                // Selecciona automáticamente el médico.
+                ddlMedico.SelectedValue = idMedico.ToString();
+
+                // Guarda la fecha y hora seleccionadas.
+                ViewState["FechaSeleccionada"] = fecha;
+                ViewState["HoraSeleccionada"] = hora;
+
+                // Carga los días y horarios disponibles del médico.
+                CargarDiasDisponibles();
+                CargarHorariosDisponibles(fecha);
+            }
+        }
+
+
+
         protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Limpia los medicos anteriores
@@ -147,6 +227,13 @@ namespace clinica_web
             rptHorariosDisponibles.DataSource = null;
             rptHorariosDisponibles.DataBind();
 
+            // Limpia la fecha y hora seleccionadas anteriormente.
+            ViewState["FechaSeleccionada"] = null;
+            ViewState["HoraSeleccionada"] = null;
+
+            // Oculta las sugerencias anteriores.
+            pnlTurnosSugeridos.Visible = false;
+
             // Verifica que este seleccionada una especialidad
             if (string.IsNullOrEmpty(ddlEspecialidad.SelectedValue))
             {
@@ -154,7 +241,37 @@ namespace clinica_web
             }
 
             CargarMedicos();
+
+            // Carga los turnos sugeridos automáticamente.
+            CargarTurnosSugeridos();
         }
+
+
+
+        // Actualiza los turnos sugeridos al cambiar de paciente.
+        protected void ddlPaciente_SelectedIndexChanged(
+            object sender, EventArgs e)
+        {
+            // Limpia el médico seleccionado anteriormente.
+            ddlMedico.ClearSelection();
+
+            // Limpia la fecha y hora seleccionadas.
+            ViewState["FechaSeleccionada"] = null;
+            ViewState["HoraSeleccionada"] = null;
+
+            // Limpia los días disponibles.
+            rptDiasDisponibles.DataSource = null;
+            rptDiasDisponibles.DataBind();
+
+            // Limpia los horarios disponibles.
+            rptHorariosDisponibles.DataSource = null;
+            rptHorariosDisponibles.DataBind();
+
+            // Actualiza los turnos sugeridos.
+            CargarTurnosSugeridos();
+        }
+
+
 
         protected void ddlMedico_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -310,7 +427,7 @@ namespace clinica_web
 
                 turno.Fecha = fecha;
                 turno.Hora = hora;
-                turno.Observaciones = txtObservaciones.Text;
+                turno.Observaciones = txtObservaciones.Text.Trim();
 
                 TurnoMedicoNegocio negocio = new TurnoMedicoNegocio();
 
@@ -369,6 +486,15 @@ namespace clinica_web
             if (ViewState["HoraSeleccionada"] == null)
             {
                 errores.Add("Debe seleccionar un horario.");
+            }
+
+            if (string.IsNullOrWhiteSpace(txtObservaciones.Text))
+            {
+                errores.Add("Debe cargar el motivo del turno en observaciones.");
+            }
+            else if (txtObservaciones.Text.Trim().Length > 255)
+            {
+                errores.Add("Las observaciones no pueden superar los 255 caracteres.");
             }
 
             if (!string.IsNullOrWhiteSpace(ddlPaciente.SelectedValue) &&

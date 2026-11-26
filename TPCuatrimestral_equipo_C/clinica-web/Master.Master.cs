@@ -41,7 +41,11 @@ namespace clinica_web
                     liObrasSociales.Visible = false;
                     liMedicos.Visible = false;
 
-                    linkTurnos.HRef = "~/MisTurnos.aspx";
+                    // Muestra únicamente el acceso a los turnos del médico.
+                    liMisTurnos.Visible = true;
+
+                    // Oculta el menú general de gestión de turnos médicos.
+                    liTurnosMedicos.Visible = false;
                 }
             }
         }

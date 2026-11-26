@@ -60,6 +60,24 @@ namespace clinica_web
         protected global::System.Web.UI.WebControls.DropDownList ddlEspecialidad;
 
         /// <summary>
+        /// Control pnlTurnosSugeridos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlTurnosSugeridos;
+
+        /// <summary>
+        /// Control rptTurnosSugeridos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptTurnosSugeridos;
+
+        /// <summary>
         /// Control ddlMedico.
         /// </summary>
         /// <remarks>
