@@ -40,12 +40,6 @@
                         </asp:CheckBoxList>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label for="turnoMedico" class="form-label">Turno de trabajo</label>
-                    <asp:DropDownList ID="ddlTurno" runat="server" CssClass="form-select">
-                        <asp:ListItem Text="Seleccione un turno..." Value="" Selected="True"></asp:ListItem>
-                    </asp:DropDownList>
-                </div>
             </div>
             <div class="d-flex justify-content-end gap-2 mt-2">
                 <a href="Medicos.aspx" class="btn btn-outline-secondary px-4">Volver</a>
