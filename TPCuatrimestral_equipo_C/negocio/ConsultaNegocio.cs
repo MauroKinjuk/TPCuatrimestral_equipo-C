@@ -57,9 +57,17 @@ namespace negocio
             try
             {
                 datos.SetearConsulta(
-                    @"UPDATE consultas
-                      SET diagnostico = @diagnostico
-                      WHERE id_turno = @idTurno");
+                    @"IF EXISTS (SELECT 1 FROM consultas WHERE id_turno = @idTurno)
+                        UPDATE consultas
+                        SET diagnostico = @diagnostico
+                        WHERE id_turno = @idTurno;
+                    ELSE
+                        INSERT INTO consultas (id_turno, motivo, diagnostico)
+                        SELECT @idTurno,
+                            LEFT(COALESCE(NULLIF(T.observaciones, ''), 'Sin motivo registrado'), 255),
+                            @diagnostico
+                        FROM turnos T
+                        WHERE T.id = @idTurno;");
 
                 datos.SetearParametro("@diagnostico", diagnostico);
                 datos.SetearParametro("@idTurno", idTurno);
