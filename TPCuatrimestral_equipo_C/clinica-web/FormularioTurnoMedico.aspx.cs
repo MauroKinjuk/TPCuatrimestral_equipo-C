@@ -447,6 +447,7 @@ namespace clinica_web
                 {
                     // Si no se está reprogramando, registra un turno nuevo.
                     negocio.Agregar(turno);
+                    Session["MensajeTurno"] = "Turno N° " + turno.Id + " creado correctamente.";
                 }
 
                 // Regresa al listado de turnos médicos.

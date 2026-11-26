@@ -15,6 +15,13 @@ namespace clinica_web
         {
             if (!IsPostBack)
             {
+                if (Session["MensajeTurno"] != null)
+                {
+                    pnlMensaje.Visible = true;
+                    lblMensaje.Text = Session["MensajeTurno"].ToString();
+                    Session.Remove("MensajeTurno");
+                }
+
                 txtFecha.Text = DateTime.Today.ToString("yyyy-MM-dd");
                 cargarDvg();
             }

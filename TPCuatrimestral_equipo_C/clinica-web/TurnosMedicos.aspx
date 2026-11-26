@@ -4,6 +4,10 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
+    <asp:Panel ID="pnlMensaje" runat="server" Visible="false" CssClass="alert alert-success">
+        <asp:Label ID="lblMensaje" runat="server"></asp:Label>
+    </asp:Panel>
+
     <!-- Buscador y alta -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex gap-2 align-items-center">
