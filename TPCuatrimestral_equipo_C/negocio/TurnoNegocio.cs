@@ -11,6 +11,8 @@ namespace negocio
         private const string consultaTurnos =
             @"SELECT T.id, T.fecha_turno, T.hora_turno, T.observaciones,
                      T.id_medico,
+                     T.id_especialidad,
+                     ESP.nombre AS nombre_especialidad,
                      M.nombre AS nombre_medico,
                      M.apellido AS apellido_medico,
                      P.id AS id_paciente, P.nombre AS nombre_paciente, P.apellido AS apellido_paciente,
@@ -19,6 +21,7 @@ namespace negocio
               FROM turnos T
               INNER JOIN pacientes P ON T.id_paciente = P.id
               INNER JOIN medicos M ON T.id_medico = M.id
+              INNER JOIN especialidades ESP ON T.id_especialidad = ESP.id
               INNER JOIN estados_turno E ON T.id_estado_turno = E.id
               LEFT JOIN consultas C ON C.id_turno = T.id";
 
@@ -170,6 +173,11 @@ namespace negocio
             turno.Medico.Id = (int)datos.Lector["id_medico"];
             turno.Medico.Nombre = (string)datos.Lector["nombre_medico"];
             turno.Medico.Apellido = (string)datos.Lector["apellido_medico"];
+
+            // Cargamos la especialidad correspondiete al turno
+            turno.Especialidad = new Especialidad();
+            turno.Especialidad.Id = (int)datos.Lector["id_especialidad"];
+            turno.Especialidad.Nombre = (string)datos.Lector["nombre_especialidad"];
 
             turno.Paciente = new Paciente();
             turno.Paciente.Id = (int)datos.Lector["id_paciente"];

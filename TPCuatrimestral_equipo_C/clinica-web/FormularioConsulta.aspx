@@ -32,6 +32,40 @@
                     <label class="form-label">Motivo</label>
                     <asp:TextBox ID="txtMotivo" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                 </div>
+
+                <!-- Historial de consultas del paciente -->
+                <div class="col-12 mb-3">
+                    <h5 class="text-primary">Historial del paciente</h5>
+
+                    <div class="table-responsive">
+                        <asp:GridView
+                            ID="dgvHistorialPaciente"
+                            runat="server"
+                            CssClass="table table-striped table-bordered"
+                            AutoGenerateColumns="false"
+                            EmptyDataText="El paciente no posee consultas anteriores.">
+
+                            <Columns>
+                                <asp:BoundField DataField="Fecha"
+                                    HeaderText="Fecha"
+                                    DataFormatString="{0:dd/MM/yyyy}" />
+
+                                <asp:BoundField DataField="Especialidad.Nombre"
+                                    HeaderText="Especialidad" />
+
+                                <asp:BoundField DataField="Medico.NombreCompleto"
+                                    HeaderText="Médico" />
+
+                                <asp:BoundField DataField="Consulta.Motivo"
+                                    HeaderText="Motivo" />
+
+                                <asp:BoundField DataField="Consulta.Diagnostico"
+                                    HeaderText="Diagnóstico" />
+                            </Columns>
+
+                        </asp:GridView>
+                    </div>
+                </div>
                 <div class="col-12 mb-3">
                     <label for="txtDiagnostico" class="form-label">Diagnóstico</label>
                     <asp:TextBox

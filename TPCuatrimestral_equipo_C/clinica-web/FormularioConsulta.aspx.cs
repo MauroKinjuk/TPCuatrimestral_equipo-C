@@ -1,6 +1,7 @@
 using dominio;
 using negocio;
 using System;
+using System.Collections.Generic;
 
 namespace clinica_web
 {
@@ -77,6 +78,36 @@ namespace clinica_web
                 txtMotivo.Text = turno.Consulta.Motivo;
                 txtDiagnostico.Text = turno.Consulta.Diagnostico;
             }
+
+            // Cargamos el historial clínico del paciente
+            cargarHistorialPaciente(turno);
+        }
+
+
+        private void cargarHistorialPaciente(TurnoMedico turnoActual)
+        {
+            TurnoNegocio negocio = new TurnoNegocio();
+
+            // Obtenemos todos los turnos del pacient
+            List<TurnoMedico> historial =
+                negocio.ListarPorPaciente(turnoActual.Paciente.Id);
+
+            List<TurnoMedico> consultasAnteriores = new List<TurnoMedico>();
+
+            // Recorremos los turnos del paciente
+            foreach (TurnoMedico turno in historial)
+            {
+                // Verificamos que sea una consulta anterior y cerrada
+                if (turno.Id != turnoActual.Id && turno.Estado.Id == 5 && turno.Consulta != null &&
+                    turno.Fecha.Date.Add(turno.Hora) < turnoActual.Fecha.Date.Add(turnoActual.Hora))
+                {
+                    consultasAnteriores.Add(turno);
+                }
+            }
+
+            // Mostramos las consultas anteriores en la tabla
+            dgvHistorialPaciente.DataSource = consultasAnteriores;
+            dgvHistorialPaciente.DataBind();
         }
     }
 }
